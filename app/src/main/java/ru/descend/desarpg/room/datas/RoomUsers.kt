@@ -13,7 +13,7 @@ import java.util.UUID
 
 @Entity
 data class RoomUsers(
-    @PrimaryKey val userId: Int,
+    @PrimaryKey(autoGenerate = true) val userId: Int,
     @ColumnInfo(name = "userName") val name: String = "",
     @ColumnInfo(name = "userPassword") val password: String?,
     @ColumnInfo(name = "userIdentity") val identity: String = UUID.randomUUID().toString()
