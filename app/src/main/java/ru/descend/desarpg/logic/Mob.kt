@@ -2,30 +2,33 @@ package ru.descend.desarpg.logic
 
 import kotlinx.serialization.Serializable
 import java.util.UUID
+import kotlin.reflect.full.declaredMemberProperties
+
+interface IntBattleChanges {
+    fun onBeginBattle(mob: Mob, enemy: Mob) {}
+}
 
 @Serializable
-data class Mob(val name: String) : IntBaseValues {
+data class Mob(val name: String): IntBattleChanges {
     val uuid: String = UUID.randomUUID().toString()
     var level: Byte = 1
-    var battleStats = BattleStats()
-    var baseStats = BaseStats()
-    var boolStats = BoolStats()
+    var battleStats: BattleStats = BattleStats()
 
     init {
-        battleStats.Health.arrayListeners.addListener {
-            if (battleStats.Health.getBattle() <= 0.0) {
-                boolStats.isAlive.set(false)
-                println("$name is DEAD")
-            }
-        }
+        BattleStats::class.declaredMemberProperties.forEach { (it.call(battleStats) as PropertyValue).mob = this }
+    }
+
+    fun onBeginBattle(enemy: Mob) {
+        //BattleStats::class.declaredMemberProperties.forEach { (it.call(battleStats) as PropertyValue).onBeginBattle() }
+        BattleStats::class.declaredMemberProperties.forEach { (it.call(battleStats) as PropertyValue).onBeginBattle(this, enemy) }
+    }
+
+    fun onEndBattle(enemy: Mob) {
+        //BattleStats::class.declaredMemberProperties.forEach { (it.call(battleStats) as PropertyValue).onEndBattle() }
     }
 
     fun onAttack(enemy: Mob) {
-        if (!boolStats.isCanAttack.get()) return
-        if (!enemy.boolStats.isAlive.get()) return
-        val curDamage = battleStats.AttackPhysic.getBattle()
-        enemy.battleStats.Health.removeBattle(curDamage)
-        onDoDamage(this, enemy)
-        enemy.onTakeDamage(enemy, this)
+        val curDamage = battleStats.attackPhysic.getCurrent()
+        enemy.battleStats.health.removeCurrent(curDamage)
     }
 }

@@ -61,4 +61,5 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.junit)
     implementation(libs.junit.jupiter)
+    implementation(kotlin("reflect"))
 }

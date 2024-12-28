@@ -1,8 +1,5 @@
 package ru.descend.desarpg.logic
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 class ItemListener(val name: String) {
     private val listenersArray: ArrayList<() -> Unit> = ArrayList()
     fun clearListeners() {

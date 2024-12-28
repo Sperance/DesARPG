@@ -4,26 +4,18 @@ import kotlinx.coroutines.delay
 
 class BattleObject(private val person1: Mob, private val person2: Mob) {
 
-    private var isBattleActive = false
-    private var countSeconds = 0
-
     suspend fun doBattle() {
-        isBattleActive = true
-        person1.battleStats.initForBattle()
-        person2.battleStats.initForBattle()
-        while (isBattleActive && person1.boolStats.isAlive.get() && person2.boolStats.isAlive.get()) {
-            if (countSeconds % 1000 == 0) {
-                println("Turn second: ${countSeconds / 1000}")
-                if (isBattleActive && person1.boolStats.isAlive.get() && person2.boolStats.isAlive.get()) person1.onAttack(person2)
-                if (isBattleActive && person1.boolStats.isAlive.get() && person2.boolStats.isAlive.get()) person2.onAttack(person1)
-                if (!person1.boolStats.isAlive.get() || !person2.boolStats.isAlive.get()) {
-                    isBattleActive = false
-                    break
-                }
-                println("Person1: ${person1.battleStats.Health} Person2: ${person2.battleStats.Health}")
-            }
-            countSeconds += 100
-            delay(100)
+        person1.onBeginBattle(person2)
+        person2.onBeginBattle(person1)
+        println("Person1: ${person1.battleStats.health} Person2: ${person2.battleStats.health}")
+        while (person1.battleStats.health.getCurrent() > 0.0 && person2.battleStats.health.getCurrent() > 0.0) {
+            person1.onAttack(person2)
+            person1.battleStats.strength.add(1)
+            person2.onAttack(person1)
+            println("Person1: ${person1.battleStats.health} Person2: ${person2.battleStats.health}")
+            delay(1000)
         }
+        person1.onEndBattle(person2)
+        person2.onEndBattle(person1)
     }
 }
