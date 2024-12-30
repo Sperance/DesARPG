@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
-    kotlin("plugin.serialization") version "2.1.0"
 }
 
 android {
@@ -58,12 +57,14 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
-    implementation (libs.gson)
+    implementation(libs.gson)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.junit)
     implementation(libs.junit.jupiter)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(kotlin("reflect"))
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
 }
 
 kapt {

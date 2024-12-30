@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/fragmentMain">
+
+    <fragment
+        android:id="@+id/fragmentMain"
+        android:name="ru.descend.desarpg.ui.FragmentMain"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentMobMain"
+            app:destination="@id/fragmentMobMain" />
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentTestButtons"
+            app:destination="@id/fragmentTestButtons" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentMobMain"
+        android:name="ru.descend.desarpg.ui.FragmentMobMain"
+        android:label="fragment_mob_main"
+        tools:layout="@layout/fragment_mob_main" />
+    <fragment
+        android:id="@+id/fragmentTestButtons"
+        android:name="ru.descend.desarpg.ui.FragmentTestButtons"
+        android:label="fragment_test_buttons"
+        tools:layout="@layout/fragment_test_buttons" />
+</navigation>

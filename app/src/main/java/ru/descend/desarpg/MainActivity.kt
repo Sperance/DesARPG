@@ -7,6 +7,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
     private lateinit var db: AppDatabase
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,32 +39,20 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        setSupportActionBar(binding.toolbar)
+        navController = findNavController(R.id.fragment)
+        NavigationUI.setupActionBarWithNavController(this, navController)
+
         initView()
     }
 
     private fun initView() = binding.apply {
-        textSimple.text = "SimeleText"
-        buttonTest.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                vm.addUser(RoomUsers(0, password = "1234552"))
-                Log.e("#TAG", "ALL: ${db.daoUsers().getAll().joinToString("\n")}")
-            }
-        }
-        roomToMob.setOnClickListener {
-            vm.getMobFromRoom(1)
-        }
-        mobToRoom.setOnClickListener {
-            val pers1 = Mob("TestHero1")
-            pers1.battleStats.attackPhysic.set(25)
-            pers1.battleStats.attackPhysic.setPercent(10)
-            pers1.battleStats.health.set(12.5)
-            pers1.battleStats.strength.set(3)
-            pers1.battleStats.health.setPercent(10.2)
-            vm.addMobToRoom(pers1)
-        }
-        allMobsRoom.setOnClickListener {
-            vm.getAllMobs()
-        }
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
     }
 
     override fun onDestroy() {

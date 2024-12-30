@@ -32,4 +32,8 @@ class MainActivityVM(app: Application) : AndroidViewModel(app) {
         val mobs = dataBase.daoMobs().getAll()
         println("ALL MOBS: \n${mobs.joinToString("\n")}")
     }
+
+    fun clearAllMobs() = viewModelScope.launch {
+        dataBase.daoMobs().deleteAll()
+    }
 }
