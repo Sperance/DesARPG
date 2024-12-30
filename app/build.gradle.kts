@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.devtools.ksp")
+    id("kotlin-kapt")
     kotlin("plugin.serialization") version "2.1.0"
 }
 
@@ -61,5 +62,12 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.junit)
     implementation(libs.junit.jupiter)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(kotlin("reflect"))
+}
+
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
 }

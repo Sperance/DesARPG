@@ -93,7 +93,11 @@ class BattleStats(
     @SerialName("hlt") var health: StatHealth = StatHealth(),
     @SerialName("aPh") var attackPhysic: StatAttackPhysic = StatAttackPhysic(),
     @SerialName("str") var strength: StatStrength = StatStrength(),
-)
+) {
+    override fun toString(): String {
+        return "BattleStats(health=$health, attackPhysic=$attackPhysic, strength=$strength)"
+    }
+}
 
 //@Serializable
 //open class BoolStats {

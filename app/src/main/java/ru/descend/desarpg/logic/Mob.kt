@@ -1,5 +1,7 @@
 package ru.descend.desarpg.logic
 
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import java.util.UUID
 import kotlin.reflect.full.declaredMemberProperties
@@ -10,8 +12,9 @@ interface IntBattleChanges {
 
 @Serializable
 data class Mob(val name: String): IntBattleChanges {
-    val uuid: String = UUID.randomUUID().toString()
-    var level: Byte = 1
+    var uuid: String = UUID.randomUUID().toString()
+    @OptIn(ExperimentalSerializationApi::class)
+    @EncodeDefault var level: Byte = 1
     var battleStats: BattleStats = BattleStats()
 
     init {
@@ -30,5 +33,9 @@ data class Mob(val name: String): IntBattleChanges {
     fun onAttack(enemy: Mob) {
         val curDamage = battleStats.attackPhysic.getCurrent()
         enemy.battleStats.health.removeCurrent(curDamage)
+    }
+
+    override fun toString(): String {
+        return "Mob(name='$name', uuid='$uuid', level=$level, battleStats=$battleStats)"
     }
 }
