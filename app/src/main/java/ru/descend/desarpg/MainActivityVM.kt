@@ -9,10 +9,13 @@ import ru.descend.desarpg.room.AppDatabase
 import ru.descend.desarpg.room.datas.RoomMobs.Companion.toMob
 import ru.descend.desarpg.room.datas.RoomMobs.Companion.toRoom
 import ru.descend.desarpg.room.datas.RoomUsers
-
+fun MainActivityVM.launch(body: suspend () -> Unit) = viewModelScope.launch { body.invoke() }
 class MainActivityVM(app: Application) : AndroidViewModel(app) {
 
     private val dataBase = AppDatabase(app)
+
+
+//    val getVMScope = viewModelScope
 
     fun addUser(user: RoomUsers) = viewModelScope.launch {
         dataBase.daoUsers().insert(user)
@@ -28,10 +31,7 @@ class MainActivityVM(app: Application) : AndroidViewModel(app) {
         println("MOB: $mob")
     }
 
-    fun getAllMobs() = viewModelScope.launch {
-        val mobs = dataBase.daoMobs().getAll()
-        println("ALL MOBS: \n${mobs.joinToString("\n")}")
-    }
+    suspend fun getAllMobs() = dataBase.daoMobs().getAll()
 
     fun clearAllMobs() = viewModelScope.launch {
         dataBase.daoMobs().deleteAll()
