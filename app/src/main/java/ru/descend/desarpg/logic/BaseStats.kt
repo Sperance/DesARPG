@@ -1,7 +1,9 @@
 package ru.descend.desarpg.logic
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -26,34 +28,21 @@ interface StatSerializer<T: PropertyValue> : KSerializer<T> {
 @Serializable(with = StatHealth::class)
 class StatHealth : PropertyValue("Health"), StatSerializer<StatHealth> {
     override val descriptor = PrimitiveSerialDescriptor("StatHealth", PrimitiveKind.STRING)
-
-//    override fun onBeginBattle() {
-//        add(mob.battleStats.strength.getCalculated() * 5.0)
-//        super.onBeginBattle()
-//    }
-//
-//    override fun onEndBattle() {
-//        remove(mob.battleStats.strength.getCalculated() * 5.0)
-//        super.onEndBattle()
-//    }
 }
 
 @Serializable(with = StatAttackPhysic::class)
 class StatAttackPhysic : PropertyValue("AttackPhysic"), StatSerializer<StatAttackPhysic> {
     override val descriptor = PrimitiveSerialDescriptor("StatAttackPhysic", PrimitiveKind.STRING)
-
-//    override fun onBeginBattle() {
-//        add(mob.battleStats.strength.getCalculated())
-//        super.onBeginBattle()
-//    }
-//
-//    override fun onEndBattle() {
-//        remove(mob.battleStats.strength.getCalculated())
-//        super.onEndBattle()
-//    }
 }
 
 @Serializable(with = StatStrength::class)
 class StatStrength : PropertyValue("Strength"), StatSerializer<StatStrength> {
     override val descriptor = PrimitiveSerialDescriptor("StatStrength", PrimitiveKind.STRING)
 }
+
+@Serializable
+class BattleStats(
+    @SerialName("hlt") var health: StatHealth = StatHealth(),
+    @SerialName("aPh") var attackPhysic: StatAttackPhysic = StatAttackPhysic(),
+    @SerialName("str") var strength: StatStrength = StatStrength(),
+)

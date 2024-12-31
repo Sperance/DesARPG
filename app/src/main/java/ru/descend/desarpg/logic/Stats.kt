@@ -1,6 +1,5 @@
 package ru.descend.desarpg.logic
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import ru.descend.desarpg.addPercent
@@ -15,7 +14,7 @@ abstract class Prop {
 
     fun getWithPercent() = get().addPercent(getPercent())
 
-    fun get() = value
+    open fun get() = value
     fun set(newValue: Number) { value = newValue.toDouble().to1Digits() }
     fun remove(newValue: Number) { value = (value - newValue.toDouble()).to1Digits() }
     fun add(newValue: Number) { value = (value + newValue.toDouble()).to1Digits() }
@@ -57,15 +56,14 @@ data class StatMods (
 open class PropertyValue(
     override val name: String
 ) : Prop(), IntBattleChanges {
-    lateinit var mob: Mob
+//    open lateinit var mob: Mob
 
     @Transient private var currentValue = 0.0
 
     fun prepareInit() {
-        currentValue = get().addPercent(getPercent())
+        currentValue = get().addPercent(getPercent()).to1Digits()
     }
-
-    private fun getCurrentForGlobalStats(): Double {
+    fun getCurrentForGlobalStats(): Double {
         prepareInit()
         return getCurrent()
     }
@@ -80,27 +78,3 @@ open class PropertyValue(
         return "(name='$name', value=${get()}, percent=${getPercent()}, currentValue=${getCurrent()}, global=${getCurrentForGlobalStats()})"
     }
 }
-
-@Serializable
-open class PropertyBlob(
-    val name: String,
-    var value: Boolean = false,
-    val description: String = ""
-)
-
-@Serializable
-class BattleStats(
-    @SerialName("hlt") var health: StatHealth = StatHealth(),
-    @SerialName("aPh") var attackPhysic: StatAttackPhysic = StatAttackPhysic(),
-    @SerialName("str") var strength: StatStrength = StatStrength(),
-) {
-    override fun toString(): String {
-        return "BattleStats(health=$health, attackPhysic=$attackPhysic, strength=$strength)"
-    }
-}
-
-//@Serializable
-//open class BoolStats {
-//    val isCanAttack = PropertyBlob("Может атаковать", true)
-//    val isAlive = PropertyBlob("Живой", true)
-//}

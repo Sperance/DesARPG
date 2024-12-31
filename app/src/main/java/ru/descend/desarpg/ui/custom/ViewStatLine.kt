@@ -122,7 +122,7 @@ class ViewStatLine @JvmOverloads constructor(
     }
 
     fun setProperty(prop: PropertyValue) {
-        this.text = prop.getWithPercent().to0Text()
+        this.text = prop.getCurrentForGlobalStats().to0Text()
         this.textPostfix = " (${prop.get().to0Text()} + ${prop.getPercent().to0Text()}%)"
         applyValues()
     }

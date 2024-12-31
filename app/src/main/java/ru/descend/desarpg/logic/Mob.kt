@@ -17,9 +17,9 @@ data class Mob(val name: String): IntBattleChanges {
     @EncodeDefault var level: Byte = 1
     var battleStats: BattleStats = BattleStats()
 
-    init {
-        BattleStats::class.declaredMemberProperties.forEach { (it.call(battleStats) as PropertyValue).mob = this }
-    }
+//    init {
+//        BattleStats::class.declaredMemberProperties.forEach { (it.call(battleStats) as PropertyValue).mob = this }
+//    }
 
     fun onBeginBattle(enemy: Mob) {
         //BattleStats::class.declaredMemberProperties.forEach { (it.call(battleStats) as PropertyValue).onBeginBattle() }
