@@ -1,15 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.FragmentMobMain">
 
-    <Button
-        android:id="@+id/button1"
-        android:text="test button"
+    <ru.descend.desarpg.ui.custom.ViewStatLine
+        android:id="@+id/textMobName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        app:mainTextStyle="bold"
+        app:textGravity="center" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp" />
+
+    <ru.descend.desarpg.ui.custom.ViewStatLine
+        android:id="@+id/textMobHealth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="6dp"
+        app:cardStrokeColor="@android:color/darker_gray"
+        app:cardStrokeWidth="1dp"
+        app:mainTextStyle="bold"
+        app:postfixTextStyle="normal"
+        app:textGravity="right"
+        app:textPrefix="Здоровье: " />
+
+    <ru.descend.desarpg.ui.custom.ViewStatLine
+        android:id="@+id/textMobAttack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="6dp"
+        app:cardStrokeColor="@android:color/darker_gray"
+        app:cardStrokeWidth="1dp"
+        app:mainTextStyle="bold"
+        app:postfixTextStyle="normal"
+        app:textGravity="right"
+        app:textPrefix="Физическая атака: " />
+
+    <ru.descend.desarpg.ui.custom.ViewStatLine
+        android:id="@+id/textMobStrength"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="6dp"
+        app:cardStrokeColor="@android:color/darker_gray"
+        app:cardStrokeWidth="1dp"
+        app:mainTextStyle="bold"
+        app:postfixTextStyle="normal"
+        app:textGravity="right"
+        app:textPrefix="Сила: " />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="6dp" />
+
+    <Button
+        android:id="@+id/button_healthTo50"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:text="Приравнять здоровье к 50" />
+
+    <Button
+        android:id="@+id/button_healthAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:text="Добавить 2 ед здоровья" />
 
 </LinearLayout>

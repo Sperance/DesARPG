@@ -13,15 +13,31 @@ fun MainActivityVM.launch(body: suspend () -> Unit) = viewModelScope.launch { bo
 class MainActivityVM(app: Application) : AndroidViewModel(app) {
 
     private val dataBase = AppDatabase(app)
+    lateinit var currentMob: Mob
 
-
-//    val getVMScope = viewModelScope
+    fun initialize() = viewModelScope.launch {
+        println("Initialized")
+        if (dataBase.daoMobs().getFromId(1) == null) {
+            val pers1 = Mob("Игрок")
+            pers1.battleStats.attackPhysic.set(10)
+            pers1.battleStats.health.set(50)
+            pers1.battleStats.health.setPercent(10)
+            pers1.battleStats.strength.set(5)
+            pers1.battleStats.attackPhysic.setPercent(20)
+            addMobToRoom(pers1)
+        }
+        currentMob = dataBase.daoMobs().getFromId(1)!!.toMob()
+    }
 
     fun addUser(user: RoomUsers) = viewModelScope.launch {
         dataBase.daoUsers().insert(user)
     }
 
-    fun addMobToRoom(mob: Mob) = viewModelScope.launch {
+    fun updateMob() = viewModelScope.launch {
+        dataBase.daoMobs().update(currentMob.toRoom())
+    }
+
+    private fun addMobToRoom(mob: Mob) = viewModelScope.launch {
         dataBase.daoMobs().insert(mob.toRoom())
         println("DATAS: ${dataBase.daoMobs().getAll().joinToString("\n")}")
     }

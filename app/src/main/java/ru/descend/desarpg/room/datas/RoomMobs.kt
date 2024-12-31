@@ -17,7 +17,7 @@ import java.util.UUID
 
 @Entity
 data class RoomMobs(
-    @PrimaryKey(autoGenerate = true) val mobId: Int = 0,
+    @PrimaryKey(autoGenerate = true) var mobId: Int = 0,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "UUID") val mobUUID: String,
     @ColumnInfo(name = "level") val mobLevel: Byte,
@@ -25,7 +25,7 @@ data class RoomMobs(
 ) {
     companion object {
         fun Mob.toRoom(): RoomMobs {
-            return RoomMobs(name = this.name, mobUUID = this.uuid, mobLevel = this.level, battleStats = Json.encodeToString(this.battleStats))
+            return RoomMobs(mobId = 1, name = this.name, mobUUID = this.uuid, mobLevel = this.level, battleStats = Json.encodeToString(this.battleStats))
         }
         fun RoomMobs.toMob(): Mob {
             return Mob(name = this.name).apply {

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/fragmentMain"
         android:name="ru.descend.desarpg.ui.FragmentMain"
-        android:label="fragment_main"
+        android:label="Главная"
         tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_fragmentMain_to_fragmentMobMain"
@@ -20,11 +20,11 @@
     <fragment
         android:id="@+id/fragmentMobMain"
         android:name="ru.descend.desarpg.ui.FragmentMobMain"
-        android:label="fragment_mob_main"
+        android:label="Информация персонажа"
         tools:layout="@layout/fragment_mob_main" />
     <fragment
         android:id="@+id/fragmentTestButtons"
         android:name="ru.descend.desarpg.ui.FragmentTestButtons"
-        android:label="fragment_test_buttons"
+        android:label="Тестирование"
         tools:layout="@layout/fragment_test_buttons" />
 </navigation>
