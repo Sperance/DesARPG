@@ -79,4 +79,18 @@
         android:layout_marginHorizontal="12dp"
         android:text="Добавить 2 ед здоровья" />
 
+    <Button
+        android:id="@+id/button_strengthAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:text="Добавить 1 ед силы" />
+
+    <Button
+        android:id="@+id/button_strengthAddPercent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:text="Добавить 5% силы" />
+
 </LinearLayout>

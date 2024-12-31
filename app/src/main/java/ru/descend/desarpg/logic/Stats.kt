@@ -1,5 +1,6 @@
 package ru.descend.desarpg.logic
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import ru.descend.desarpg.addPercent
@@ -25,6 +26,60 @@ abstract class Prop {
     fun addPercent(newValue: Number) { percent = (percent + newValue.toDouble()).to1Digits() }
 }
 
+@Serializable
+abstract class StockStatsProp(override var name: String) : Prop() {
+    @Transient private var currentValue = 0.0
+    @Transient lateinit var stats: BattleStats
+    fun prepareInit() {
+        currentValue = get().addPercent(getPercent()).to1Digits()
+    }
+    fun getCurrentForGlobalStats(): Double {
+        prepareInit()
+        return getCurrent()
+    }
+    fun getCurrent(): Double {
+        return currentValue
+    }
+    fun setCurrent(newValue: Number) { currentValue = newValue.toDouble().to1Digits() }
+    fun removeCurrent(newValue: Number) { currentValue = (currentValue - newValue.toDouble()).to1Digits() }
+    fun addCurrent(newValue: Number) { currentValue = (currentValue + newValue.toDouble()).to1Digits() }
+    override fun toString(): String {
+        return "StockStatsProp(name='$name', get=${get()}, percent=${getPercent()}, currentValue=$currentValue)"
+    }
+}
+
+@Serializable
+sealed class StockStats {
+    @Serializable class StockStatHealth : StockStatsProp("Health") {
+        override fun get(): Double {
+            return super.get() + (stats.strength.getCurrentForGlobalStats() * stats.healthForStrength.getCurrentForGlobalStats()).to1Digits()
+        }
+    }
+    @Serializable class StockStatAttack : StockStatsProp("Damage") {
+        override fun get(): Double {
+            return super.get() + (stats.strength.getCurrentForGlobalStats() * stats.attackForStrength.getCurrentForGlobalStats()).to1Digits()
+        }
+    }
+    @Serializable class StockStatStrength : StockStatsProp("Strength")
+    @Serializable class StockStatHealthForStrength : StockStatsProp("HealthForStrength")
+    @Serializable class StockStatAttackForStrength : StockStatsProp("AttackForStrength")
+}
+
+@Serializable
+class BattleStats {
+    var health = StockStats.StockStatHealth()
+    var attackPhysic = StockStats.StockStatAttack()
+    var strength = StockStats.StockStatStrength()
+    var healthForStrength = StockStats.StockStatHealthForStrength()
+    var attackForStrength = StockStats.StockStatAttackForStrength()
+
+    init {
+        health.stats = this
+        attackPhysic.stats = this
+        strength.stats = this
+    }
+}
+
 class StatModObj {
     private val listParams = ArrayList<StatMods>()
 
@@ -40,41 +95,9 @@ class StatModObj {
         listParams.clear()
     }
 }
-
 data class StatMods (
     val hash: Int,
     val addValue: Double = 0.0,
     val addPercent: Double = 0.0,
     val addBattle: Double = 0.0
-) {
-    override fun toString(): String {
-        return "(hash='$hash', value=$addValue, percent=$addPercent, battle=$addBattle)"
-    }
-}
-
-@Serializable
-open class PropertyValue(
-    override val name: String
-) : Prop(), IntBattleChanges {
-//    open lateinit var mob: Mob
-
-    @Transient private var currentValue = 0.0
-
-    fun prepareInit() {
-        currentValue = get().addPercent(getPercent()).to1Digits()
-    }
-    fun getCurrentForGlobalStats(): Double {
-        prepareInit()
-        return getCurrent()
-    }
-    fun getCurrent(): Double {
-        return currentValue
-    }
-    fun setCurrent(newValue: Number) { currentValue = newValue.toDouble().to1Digits() }
-    fun removeCurrent(newValue: Number) { currentValue = (currentValue - newValue.toDouble()).to1Digits() }
-    fun addCurrent(newValue: Number) { currentValue = (currentValue + newValue.toDouble()).to1Digits() }
-
-    override fun toString(): String {
-        return "(name='$name', value=${get()}, percent=${getPercent()}, currentValue=${getCurrent()}, global=${getCurrentForGlobalStats()})"
-    }
-}
+)

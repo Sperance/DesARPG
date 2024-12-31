@@ -4,47 +4,35 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.descend.desarpg.logic.Mob
 import ru.descend.desarpg.room.AppDatabase
-import ru.descend.desarpg.room.datas.RoomMobs.Companion.toMob
-import ru.descend.desarpg.room.datas.RoomMobs.Companion.toRoom
-import ru.descend.desarpg.room.datas.RoomUsers
+import ru.descend.desarpg.room.datas.RoomMobs
 fun MainActivityVM.launch(body: suspend () -> Unit) = viewModelScope.launch { body.invoke() }
 class MainActivityVM(app: Application) : AndroidViewModel(app) {
 
     private val dataBase = AppDatabase(app)
-    lateinit var currentMob: Mob
+    lateinit var currentMob: RoomMobs
 
     fun initialize() = viewModelScope.launch {
-        println("Initialized")
+//        dataBase.daoMobs().deleteAll()
         if (dataBase.daoMobs().getFromId(1) == null) {
-            val pers1 = Mob("Игрок")
+            val pers1 = RoomMobs(mobId = 1, name = "Игрок")
             pers1.battleStats.attackPhysic.set(10)
             pers1.battleStats.health.set(50)
             pers1.battleStats.health.setPercent(10)
             pers1.battleStats.strength.set(5)
             pers1.battleStats.attackPhysic.setPercent(20)
-            addMobToRoom(pers1)
+            pers1.mainInit()
+            pers1.toSerializeRoom()
+            dataBase.daoMobs().insert(pers1)
         }
-        currentMob = dataBase.daoMobs().getFromId(1)!!.toMob()
-    }
-
-    fun addUser(user: RoomUsers) = viewModelScope.launch {
-        dataBase.daoUsers().insert(user)
+        println("ALL MOBS: ${dataBase.daoMobs().getAll()}")
+        currentMob = dataBase.daoMobs().getFromId(1)!!
+        currentMob.fromSerializeRoom()
     }
 
     fun updateMob() = viewModelScope.launch {
-        dataBase.daoMobs().update(currentMob.toRoom())
-    }
-
-    private fun addMobToRoom(mob: Mob) = viewModelScope.launch {
-        dataBase.daoMobs().insert(mob.toRoom())
-        println("DATAS: ${dataBase.daoMobs().getAll().joinToString("\n")}")
-    }
-
-    fun getMobFromRoom(id: Int) = viewModelScope.launch {
-        val mob = dataBase.daoMobs().getFromId(id)?.toMob()
-        println("MOB: $mob")
+        currentMob.toSerializeRoom()
+        println("UPDATED: " + dataBase.daoMobs().update(currentMob))
     }
 
     suspend fun getAllMobs() = dataBase.daoMobs().getAll()

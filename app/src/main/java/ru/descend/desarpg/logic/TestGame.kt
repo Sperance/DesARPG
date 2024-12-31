@@ -13,7 +13,7 @@ class TestGame {
         pers1.battleStats.health.set(100)
         pers1.battleStats.health.setPercent(20)
         pers1.battleStats.strength.set(5)
-//        println("strength: ${pers1.battleStats.strength}")
+        println("strength: ${pers1.battleStats.strength}")
 
         pers1.battleStats.health.prepareInit()
         println("health: ${pers1.battleStats.health}")
@@ -21,10 +21,10 @@ class TestGame {
         pers1.battleStats.health.removeCurrent(10)
         pers1.battleStats.health.removeCurrent(20)
         pers1.battleStats.health.removeCurrent(50)
-//        pers1.battleStats.health.removeCurrent(10)
+        pers1.battleStats.health.removeCurrent(10)
 
         println("health: ${pers1.battleStats.health}")
-//        println("strength: ${pers1.battleStats.strength}")
+        println("strength: ${pers1.battleStats.strength}")
     }
 
     @Test
@@ -60,17 +60,17 @@ class TestGame {
         pers2.battleStats.attackPhysic.set(8)
         pers2.battleStats.health.set(250)
 
-        val battle = BattleObject(pers1, pers2)
-        runBlocking {
-            battle.doBattle()
-        }
+//        val battle = BattleObject(pers1, pers2)
+//        runBlocking {
+//            battle.doBattle()
+//        }
         println("P1: ${pers1.battleStats.health}")
         println("P2: ${pers2.battleStats.health}")
 
-        val battle2 = BattleObject(pers1, pers2)
-        runBlocking {
-            battle2.doBattle()
-        }
+//        val battle2 = BattleObject(pers1, pers2)
+//        runBlocking {
+//            battle2.doBattle()
+//        }
         println("P1: ${pers1.battleStats.health}")
         println("P2: ${pers2.battleStats.health}")
     }

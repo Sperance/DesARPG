@@ -4,7 +4,7 @@ import ru.descend.desarpg.databinding.FragmentMobMainBinding
 
 class FragmentMobMain : BaseFragment<FragmentMobMainBinding>(FragmentMobMainBinding::inflate) {
 
-    fun initBaseStats() {
+    private fun initBaseStats() {
         binding.textMobName.setText(viewModel.currentMob.name)
         binding.textMobHealth.setProperty(viewModel.currentMob.battleStats.health)
         binding.textMobAttack.setProperty(viewModel.currentMob.battleStats.attackPhysic)
@@ -21,6 +21,16 @@ class FragmentMobMain : BaseFragment<FragmentMobMainBinding>(FragmentMobMainBind
         }
         binding.buttonHealthAdd.setOnClickListener {
             viewModel.currentMob.battleStats.health.add(2)
+            viewModel.updateMob()
+            initBaseStats()
+        }
+        binding.buttonStrengthAdd.setOnClickListener {
+            viewModel.currentMob.battleStats.strength.add(1)
+            viewModel.updateMob()
+            initBaseStats()
+        }
+        binding.buttonStrengthAddPercent.setOnClickListener {
+            viewModel.currentMob.battleStats.strength.addPercent(5)
             viewModel.updateMob()
             initBaseStats()
         }

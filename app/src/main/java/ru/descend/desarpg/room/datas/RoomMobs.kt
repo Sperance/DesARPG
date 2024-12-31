@@ -12,28 +12,34 @@ import androidx.room.Update
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.descend.desarpg.logic.BattleStats
-import ru.descend.desarpg.logic.Mob
 import java.util.UUID
 
 @Entity
 data class RoomMobs(
     @PrimaryKey(autoGenerate = true) var mobId: Int = 0,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "UUID") val mobUUID: String,
-    @ColumnInfo(name = "level") val mobLevel: Byte,
-    @ColumnInfo(name = "battleStats") val battleStats: String
+    @ColumnInfo(name = "UUID") val mobUUID: String = UUID.randomUUID().toString(),
+    @ColumnInfo(name = "level") val mobLevel: Byte = 1,
+    @ColumnInfo(name = "battleStats") var battleStatsStr: String = ""
 ) {
-    companion object {
-        fun Mob.toRoom(): RoomMobs {
-            return RoomMobs(mobId = 1, name = this.name, mobUUID = this.uuid, mobLevel = this.level, battleStats = Json.encodeToString(this.battleStats))
-        }
-        fun RoomMobs.toMob(): Mob {
-            return Mob(name = this.name).apply {
-                this.uuid = this@toMob.mobUUID
-                this.level = this@toMob.mobLevel
-                this.battleStats = Json.decodeFromString<BattleStats>(this@toMob.battleStats)
-            }
-        }
+    @androidx.room.Ignore var battleStats = BattleStats()
+
+    fun onAttack(enemy: RoomMobs) {
+        val curDamage = battleStats.attackPhysic.getWithPercent()
+        enemy.battleStats.health.remove(curDamage)
+    }
+
+    fun mainInit() {
+        battleStats.healthForStrength.set(5)
+        battleStats.attackForStrength.set(2)
+    }
+
+    fun toSerializeRoom() {
+        battleStatsStr = Json.encodeToString(this.battleStats)
+    }
+
+    fun fromSerializeRoom() {
+        battleStats = Json.decodeFromString<BattleStats>(battleStatsStr)
     }
 }
 
@@ -48,7 +54,7 @@ interface DaoMobs {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(values: List<RoomMobs>)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(value: RoomMobs)
 
     @Update
