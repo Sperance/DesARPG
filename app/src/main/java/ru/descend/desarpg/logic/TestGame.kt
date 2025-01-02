@@ -4,12 +4,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.Test
+import ru.descend.desarpg.room.datas.RoomMobs
 
 class TestGame {
 
     @Test
     fun testBaseStats() {
-        val pers1 = Mob("Игрок")
+        val pers1 = RoomMobs(name = "Игрок")
         pers1.battleStats.health.set(100)
         pers1.battleStats.health.setPercent(20)
         pers1.battleStats.strength.set(5)
@@ -28,8 +29,21 @@ class TestGame {
     }
 
     @Test
+    fun testSerializationItems() {
+        val item = EquippingItem(name = "Меч света", rarity = EnumItemRarity.DEFAULT)
+        item.paramsBool.add(StockSimpleStatsBool.IsCanSell(false))
+
+        val string = Json.encodeToString(item)
+        println("before: $item")
+        println(string)
+
+        val newItem = Json.decodeFromString<EquippingItem>(string)
+        println("after: $newItem")
+    }
+
+    @Test
     fun testSerialization() {
-        val pers1 = Mob("Игрок")
+        val pers1 = RoomMobs(name = "Игрок")
         pers1.battleStats.attackPhysic.set(25)
         pers1.battleStats.attackPhysic.setPercent(10)
         pers1.battleStats.health.set(12.5)
@@ -44,19 +58,19 @@ class TestGame {
 
         pers1.battleStats.health.set(42.5)
 
-        val newPers = Json.decodeFromString<Mob>(string)
+        val newPers = Json.decodeFromString<RoomMobs>(string)
         println("health: ${newPers.battleStats.health}")
     }
 
     @Test
     fun test1() {
-        val pers1 = Mob("Игрок")
+        val pers1 = RoomMobs(name = "Игрок")
         pers1.battleStats.attackPhysic.set(10)
         pers1.battleStats.health.set(50)
         pers1.battleStats.health.setPercent(10)
         pers1.battleStats.strength.set(5)
         pers1.battleStats.attackPhysic.setPercent(20)
-        val pers2 = Mob("Враг")
+        val pers2 = RoomMobs(name = "Враг")
         pers2.battleStats.attackPhysic.set(8)
         pers2.battleStats.health.set(250)
 

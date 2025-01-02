@@ -1,6 +1,5 @@
 package ru.descend.desarpg.logic
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import ru.descend.desarpg.addPercent

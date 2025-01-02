@@ -16,7 +16,9 @@ data class RoomItems(
     @PrimaryKey(autoGenerate = true) val itemId: Int,
     @ColumnInfo(name = "itemName") val name: String,
     @ColumnInfo(name = "itemDescription") val description: String = "",
-    @ColumnInfo(name = "itemIdentity") val identity: String = UUID.randomUUID().toString()
+    @ColumnInfo(name = "itemIdentity") val identity: String = UUID.randomUUID().toString(),
+    @ColumnInfo(name = "equipped") val isEquipped: Boolean = false,
+    @ColumnInfo(name = "rarity") val rarity: Byte
 )
 
 @Dao

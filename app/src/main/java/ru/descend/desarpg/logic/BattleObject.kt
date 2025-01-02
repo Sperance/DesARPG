@@ -1,8 +1,9 @@
 package ru.descend.desarpg.logic
 
 import kotlinx.coroutines.delay
+import ru.descend.desarpg.room.datas.RoomMobs
 
-class BattleObject(private val person1: Mob, private val person2: Mob) {
+class BattleObject(private val person1: RoomMobs, private val person2: RoomMobs) {
 
     suspend fun doBattle() {
 //        person1.onBeginBattle(person2)

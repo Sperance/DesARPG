@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
@@ -22,7 +23,7 @@ data class RoomMobs(
     @ColumnInfo(name = "level") val mobLevel: Byte = 1,
     @ColumnInfo(name = "battleStats") var battleStatsStr: String = ""
 ) {
-    @androidx.room.Ignore var battleStats = BattleStats()
+    @Ignore var battleStats = BattleStats()
 
     fun onAttack(enemy: RoomMobs) {
         val curDamage = battleStats.attackPhysic.getWithPercent()
