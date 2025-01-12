@@ -11,6 +11,7 @@ import ru.descend.desarpg.room.datas.DaoUsers
 import ru.descend.desarpg.room.datas.RoomItems
 import ru.descend.desarpg.room.datas.RoomMobs
 import ru.descend.desarpg.room.datas.RoomUsers
+import java.util.UUID
 
 @Database(entities =
 [RoomUsers::class, RoomItems::class, RoomMobs::class],
@@ -30,7 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
-            AppDatabase::class.java, "desarpg-main-database-inventory-28cdb9ce-735b-4230-a080-5c8d3ae28baf.db")
+            AppDatabase::class.java, "desarpg-main-${UUID.randomUUID()}.db")
             .build()
     }
 }

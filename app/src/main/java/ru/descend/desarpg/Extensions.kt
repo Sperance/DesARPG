@@ -1,6 +1,7 @@
 package ru.descend.desarpg
 
 import android.annotation.SuppressLint
+import android.util.Log
 
 @SuppressLint("DefaultLocale")
 fun Double.to1Digits() = String.format("%.1f", this).replace(",", ".").toDouble()
@@ -22,4 +23,8 @@ fun Double.addPercent(value: Double) : Double {
 
 fun Double.removePercent(value: Double) : Double {
     return (this - getPercent(value)).to1Digits()
+}
+
+fun log(text: String?) {
+    Log.e("#DES", text?:"")
 }

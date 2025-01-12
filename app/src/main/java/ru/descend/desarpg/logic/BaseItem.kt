@@ -1,18 +1,19 @@
 package ru.descend.desarpg.logic
 
-import kotlinx.serialization.Contextual
+import android.graphics.Color
+import androidx.annotation.ColorInt
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class EnumItemRarity(rarityName: String) {
-    DEFAULT("Обычный"),
-    MAGIC("Магический"),
-    RARITY("Редкий"),
-    UNIQUE("Уникальный")
+enum class EnumItemRarity(val rarityName: String, @ColorInt val rarityColor: Int) {
+    DEFAULT("Обычный", Color.WHITE),
+    MAGIC("Магический", Color.BLUE),
+    RARITY("Редкий", Color.YELLOW),
+    UNIQUE("Уникальный", Color.RED)
 }
 
 @Serializable
-abstract class BaseItem {
+sealed class BaseItem {
     abstract val name: String
     abstract var rarity: EnumItemRarity
     var description: String = ""
@@ -29,3 +30,17 @@ class EquippingItem(override val name: String, override var rarity: EnumItemRari
 
 @Serializable
 class SimpleItem(override val name: String, override var rarity: EnumItemRarity) : BaseItem()
+
+@Serializable
+class InventoryMob {
+    @Serializable
+    private val arrayItems = ArrayList<BaseItem>()
+
+    fun clearInventory() {
+        arrayItems.clear()
+    }
+
+    fun addToInventory(item: BaseItem) {
+        arrayItems.add(item)
+    }
+}

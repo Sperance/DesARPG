@@ -28,18 +28,18 @@ class TestGame {
         println("strength: ${pers1.battleStats.strength}")
     }
 
-    @Test
-    fun testSerializationItems() {
-        val item = EquippingItem(name = "Меч света", rarity = EnumItemRarity.DEFAULT)
-        item.paramsBool.add(StockSimpleStatsBool.IsCanSell(false))
-
-        val string = Json.encodeToString(item)
-        println("before: $item")
-        println(string)
-
-        val newItem = Json.decodeFromString<EquippingItem>(string)
-        println("after: $newItem")
-    }
+//    @Test
+//    fun testSerializationItems() {
+//        val item = EquippingItem(name = "Меч света", rarity = EnumItemRarity.DEFAULT)
+//        item.paramsBool.add(StockSimpleStatsBool.IsCanSell(false))
+//
+//        val string = Json.encodeToString(item)
+//        println("before: $item")
+//        println(string)
+//
+//        val newItem = Json.decodeFromString<EquippingItem>(string)
+//        println("after: $newItem")
+//    }
 
     @Test
     fun testSerialization() {

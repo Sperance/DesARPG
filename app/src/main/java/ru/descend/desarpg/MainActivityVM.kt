@@ -40,4 +40,8 @@ class MainActivityVM(app: Application) : AndroidViewModel(app) {
     fun clearAllMobs() = viewModelScope.launch {
         dataBase.daoMobs().deleteAll()
     }
+
+    fun clearAllItems() = viewModelScope.launch {
+        dataBase.daoItems().deleteAll()
+    }
 }

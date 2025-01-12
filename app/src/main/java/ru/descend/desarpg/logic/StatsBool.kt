@@ -2,13 +2,14 @@ package ru.descend.desarpg.logic
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 abstract class StockSimpleStat<T> (
     var description: String = ""
 ) {
     abstract val name: String
-    @Contextual abstract var value: T
+    abstract var value: T
 
     abstract fun get() : T
     abstract fun set(newValue: T)

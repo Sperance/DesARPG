@@ -13,6 +13,7 @@ import androidx.room.Update
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.descend.desarpg.logic.BattleStats
+import ru.descend.desarpg.logic.InventoryMob
 import java.util.UUID
 
 @Entity
@@ -21,9 +22,11 @@ data class RoomMobs(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "UUID") val mobUUID: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "level") val mobLevel: Byte = 1,
-    @ColumnInfo(name = "battleStats") var battleStatsStr: String = ""
+    @ColumnInfo(name = "battleStats") var battleStatsStr: String = "",
+    @ColumnInfo(name = "inventoryMob") var inventoryMobStr: String = "",
 ) {
     @Ignore var battleStats = BattleStats()
+    @Ignore var inventoryItems = InventoryMob()
 
     fun onAttack(enemy: RoomMobs) {
         val curDamage = battleStats.attackPhysic.getWithPercent()
@@ -37,10 +40,12 @@ data class RoomMobs(
 
     fun toSerializeRoom() {
         battleStatsStr = Json.encodeToString(this.battleStats)
+        inventoryMobStr = Json.encodeToString(this.inventoryItems)
     }
 
     fun fromSerializeRoom() {
         battleStats = Json.decodeFromString<BattleStats>(battleStatsStr)
+        inventoryItems = Json.decodeFromString<InventoryMob>(inventoryMobStr)
     }
 }
 

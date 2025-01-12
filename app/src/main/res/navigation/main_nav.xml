@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_fragmentMain_to_fragmentTestButtons"
             app:destination="@id/fragmentTestButtons" />
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentMobInventory"
+            app:destination="@id/fragmentMobInventory" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMobMain"
@@ -27,4 +30,9 @@
         android:name="ru.descend.desarpg.ui.FragmentTestButtons"
         android:label="Тестирование"
         tools:layout="@layout/fragment_test_buttons" />
+    <fragment
+        android:id="@+id/fragmentMobInventory"
+        android:name="ru.descend.desarpg.ui.FragmentMobInventory"
+        android:label="Инвентарь"
+        tools:layout="@layout/fragment_mob_inventory" />
 </navigation>
