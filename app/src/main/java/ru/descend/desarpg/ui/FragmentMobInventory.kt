@@ -15,19 +15,18 @@ class FragmentMobInventory : BaseFragment<FragmentMobInventoryBinding>(FragmentM
         binding.buttonAddSimpleItem.setOnClickListener {
             val newSimpleItem = SimpleItem("Сфера запаса", EnumItemRarity.RARITY)
             viewModel.currentMob.inventoryItems.addToInventory(newSimpleItem)
-            adapterInventory.addItem(newSimpleItem)
+            adapterInventory.onNewData(viewModel.currentMob.inventoryItems.getAll())
             viewModel.updateMob()
         }
         binding.buttonAddEquipItem.setOnClickListener {
             val newEquipItem = EquippingItem("Меч Жнеца", EnumItemRarity.MAGIC)
             newEquipItem.description = "Меч который может Всё"
             viewModel.currentMob.inventoryItems.addToInventory(newEquipItem)
-            adapterInventory.addItem(newEquipItem)
+            adapterInventory.onNewData(viewModel.currentMob.inventoryItems.getAll())
             viewModel.updateMob()
             viewModel.updateMob()
         }
         binding.buttonClearItems.setOnClickListener {
-            viewModel.clearAllItems()
             adapterInventory.clear()
             viewModel.updateMob()
         }

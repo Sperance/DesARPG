@@ -1,9 +1,11 @@
 package ru.descend.desarpg
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
@@ -22,16 +24,29 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        viewModel.initialize(this.hashCode().toString())
+
+        //Убираем системный appBar с экрана
+        //enableEdgeToEdge()
+
+        //Устанавливаем постоянную ночную тему
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        db = AppDatabase(this@MainActivity)
-        viewModel.initialize()
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        //Инициализация ROOM базы
+        db = AppDatabase(this@MainActivity)
+
+        //Инициализация главной ViewModel
+        log("start init")
 
         setSupportActionBar(binding.toolbar)
         navController = findNavController(R.id.fragment)

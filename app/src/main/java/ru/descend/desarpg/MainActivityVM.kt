@@ -3,6 +3,7 @@ package ru.descend.desarpg
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import ru.descend.desarpg.room.AppDatabase
 import ru.descend.desarpg.room.datas.RoomMobs
@@ -12,10 +13,12 @@ class MainActivityVM(app: Application) : AndroidViewModel(app) {
     private val dataBase = AppDatabase(app)
     lateinit var currentMob: RoomMobs
 
-    fun initialize() = viewModelScope.launch {
-//        dataBase.daoMobs().deleteAll()
-        if (dataBase.daoMobs().getFromId(1) == null) {
-            val pers1 = RoomMobs(mobId = 1, name = "Игрок")
+    fun initialize(str: String) = viewModelScope.launch {
+        clearAllMobs()
+        clearAllItems()
+        log("[CLEARS COMPLETED] $str ${this.hashCode()}")
+        if (dataBase.daoMobs().getAll().isEmpty()) {
+            val pers1 = RoomMobs(name = "Игрок")
             pers1.battleStats.attackPhysic.set(10)
             pers1.battleStats.health.set(50)
             pers1.battleStats.health.setPercent(10)
@@ -25,8 +28,9 @@ class MainActivityVM(app: Application) : AndroidViewModel(app) {
             pers1.toSerializeRoom()
             dataBase.daoMobs().insert(pers1)
         }
-        println("ALL MOBS: ${dataBase.daoMobs().getAll()}")
-        currentMob = dataBase.daoMobs().getFromId(1)!!
+        val allMobs = dataBase.daoMobs().getAll()
+        log("ALL MOBS: $allMobs")
+        currentMob = allMobs.last()
         currentMob.fromSerializeRoom()
     }
 
@@ -37,11 +41,11 @@ class MainActivityVM(app: Application) : AndroidViewModel(app) {
 
     suspend fun getAllMobs() = dataBase.daoMobs().getAll()
 
-    fun clearAllMobs() = viewModelScope.launch {
+    suspend fun clearAllMobs() {
         dataBase.daoMobs().deleteAll()
     }
 
-    fun clearAllItems() = viewModelScope.launch {
+    suspend fun clearAllItems() {
         dataBase.daoItems().deleteAll()
     }
 }

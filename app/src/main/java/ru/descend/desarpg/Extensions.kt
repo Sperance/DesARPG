@@ -25,6 +25,10 @@ fun Double.removePercent(value: Double) : Double {
     return (this - getPercent(value)).to1Digits()
 }
 
-fun log(text: String?) {
-    Log.e("#DES", text?:"")
+fun log(textLog: String) {
+    if (textLog.trim { it <= ' ' }.isNotEmpty()) Log.e("DES_LOG",   stackTraceLog(Thread.currentThread().stackTrace) + ": " + textLog)
+}
+
+private fun stackTraceLog(trace: Array<StackTraceElement>): String {
+    return trace[4].fileName + "(" + trace[4].lineNumber + ")::" + trace[3].fileName + "(" + trace[3].lineNumber + ")"
 }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@android:color/transparent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
@@ -10,6 +11,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp">
 
         <LinearLayout
@@ -32,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="serif"
+                android:textColor="@color/defaultText"
                 android:textStyle="bold"
                 tools:text="Префикс: " />
 
@@ -42,6 +45,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:fontFamily="serif"
+                android:textColor="@color/defaultText"
                 tools:text="Текст" />
 
             <TextView
@@ -50,6 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="serif"
+                android:textColor="@color/defaultText"
                 android:textStyle="bold"
                 tools:text="Постфикс" />
 

@@ -12,5 +12,10 @@ class AdapterInventoryItems : DesAdapter<BaseItem, AdapterItemInventoryMobBindin
         binding.textItemName.setTextPostfix(item.rarity.rarityName)
         binding.textItemName.setPostfixTextColor(item.rarity.rarityColor)
         binding.textItemDescription.setText(item.description)
+        binding.textCount.setMaybeText(item.count)
+    }
+
+    override fun isAreContentsTheSame(itemNew: BaseItem, itemOld: BaseItem): Boolean? {
+        return false
     }
 }

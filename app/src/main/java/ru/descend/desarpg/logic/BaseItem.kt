@@ -16,6 +16,7 @@ enum class EnumItemRarity(val rarityName: String, @ColorInt val rarityColor: Int
 sealed class BaseItem {
     abstract val name: String
     abstract var rarity: EnumItemRarity
+    var count = 1
     var description: String = ""
     var paramsBool: ArrayList<StockStatsBool> = arrayListOf()
     var paramsValue: ArrayList<StockStatsValue> = arrayListOf()
@@ -36,11 +37,18 @@ class InventoryMob {
     @Serializable
     private val arrayItems = ArrayList<BaseItem>()
 
+    fun getAll() = arrayItems
+
     fun clearInventory() {
         arrayItems.clear()
     }
 
     fun addToInventory(item: BaseItem) {
-        arrayItems.add(item)
+        val findedItem = arrayItems.find { it.name == item.name && it is SimpleItem }
+        if (findedItem != null) {
+            findedItem.count++
+        } else {
+            arrayItems.add(item)
+        }
     }
 }

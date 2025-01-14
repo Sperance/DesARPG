@@ -31,7 +31,8 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
-            AppDatabase::class.java, "desarpg-main-${UUID.randomUUID()}.db")
+            AppDatabase::class.java, "desarpg-main-1.db")
+//            AppDatabase::class.java, "desarpg-main-${UUID.randomUUID()}.db")
             .build()
     }
 }

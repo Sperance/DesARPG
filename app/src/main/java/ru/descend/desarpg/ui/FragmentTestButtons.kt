@@ -11,8 +11,5 @@ class FragmentTestButtons : BaseFragment<FragmentTestButtonsBinding>(FragmentTes
                 println("MOBS: $mobs")
             }
         }
-        binding.buttonClearMobs.setOnClickListener {
-            viewModel.clearAllMobs()
-        }
     }
 }

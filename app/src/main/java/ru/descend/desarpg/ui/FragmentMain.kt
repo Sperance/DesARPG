@@ -5,9 +5,8 @@ import ru.descend.desarpg.R
 import ru.descend.desarpg.databinding.FragmentMainBinding
 
 class FragmentMain : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
+
     override fun setUpViews() {
-        viewModel.clearAllMobs()
-        viewModel.clearAllItems()
         binding.buttonToButtons.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentMain_to_fragmentTestButtons)
         }

@@ -1,6 +1,7 @@
 package ru.descend.desarpg.ui.custom
 
 import android.content.Context
+import android.content.res.Resources
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.Typeface
@@ -31,15 +32,15 @@ class ViewStatLine @JvmOverloads constructor(
     private var textPrefix: CharSequence = ""
     private var textPostfix: CharSequence = ""
 
-    private var textColor: Int = Color.BLACK
+    @ColorInt private var textColor: Int = ContextCompat.getColor(context, R.color.defaultText)
     private var textSize: Float = 14f
     private var textGravity: Int = Gravity.CENTER_VERTICAL or Gravity.START
 
-    private var prefixTextColor: Int = Color.BLACK
+    @ColorInt private var prefixTextColor: Int = ContextCompat.getColor(context, R.color.defaultText)
     private var prefixTextSize: Float = 14f
     private var prefixTextStyle: Int = Typeface.BOLD
 
-    private var postfixTextColor: Int = Color.BLACK
+    @ColorInt private var postfixTextColor: Int = ContextCompat.getColor(context, R.color.defaultText)
     private var postfixTextSize: Float = 14f
     private var postfixTextStyle: Int = Typeface.BOLD
 
@@ -59,15 +60,15 @@ class ViewStatLine @JvmOverloads constructor(
             textPrefix = a.getString(R.styleable.ViewStatLine_textPrefix) ?: ""
             textPostfix = a.getString(R.styleable.ViewStatLine_textPostfix) ?: ""
 
-            textColor = a.getColor(R.styleable.ViewStatLine_textColor, Color.BLACK)
+            textColor = a.getColor(R.styleable.ViewStatLine_textColor, ContextCompat.getColor(context, R.color.defaultText))
             textSize = a.getDimension(R.styleable.ViewStatLine_textSize, 14f)
             textGravity = a.getInt(R.styleable.ViewStatLine_textGravity, Gravity.CENTER_VERTICAL or Gravity.START)
 
-            prefixTextColor = a.getColor(R.styleable.ViewStatLine_prefixTextColor, Color.BLACK)
+            prefixTextColor = a.getColor(R.styleable.ViewStatLine_prefixTextColor, ContextCompat.getColor(context, R.color.defaultText))
             prefixTextSize = a.getDimension(R.styleable.ViewStatLine_prefixTextSize, 14f)
             prefixTextStyle = a.getInt(R.styleable.ViewStatLine_prefixTextStyle, Typeface.BOLD)
 
-            postfixTextColor = a.getColor(R.styleable.ViewStatLine_postfixTextColor, Color.BLACK)
+            postfixTextColor = a.getColor(R.styleable.ViewStatLine_postfixTextColor, ContextCompat.getColor(context, R.color.defaultText))
             postfixTextSize = a.getDimension(R.styleable.ViewStatLine_postfixTextSize, 14f)
             postfixTextStyle = a.getInt(R.styleable.ViewStatLine_postfixTextStyle, Typeface.BOLD)
 
@@ -121,10 +122,36 @@ class ViewStatLine @JvmOverloads constructor(
         applyValues()
     }
 
+    fun setMaybeText(text: CharSequence?) {
+        if (text == null || text.trim().isBlank()) setVisibility(false)
+        else {
+            this.text = text.toString()
+            setVisibility(true)
+        }
+        applyValues()
+    }
+
+    fun setMaybeText(text: Number?) {
+        if (text == null || text == 0) setVisibility(false)
+        else {
+            this.text = text.toString()
+            setVisibility(true)
+        }
+        applyValues()
+    }
+
     fun setProperty(prop: StockStatsProp) {
         this.text = prop.getCurrentForGlobalStats().to0Text()
         this.textPostfix = " (${prop.get().to0Text()} + ${prop.getPercent().to0Text()}%)"
         applyValues()
+    }
+
+    fun setVisibility(visible: Boolean) {
+        this.visibility = if (visible) VISIBLE else GONE
+    }
+
+    fun isVisible(): Boolean {
+        return visibility == VISIBLE
     }
 
     fun setTextPrefix(textPrefix: CharSequence) {
