@@ -119,7 +119,7 @@ abstract class DesAdapter<T, VM: ViewBinding>(private val classBinding: KClass<*
     /**
      * Задать список элементов адаптера
      */
-    fun onNewData(newData: Array<T>){
+    fun onNewData(newData: Collection<T>){
         val array = newData.toCollection((ArrayList()))
         val diffResult = DiffUtil.calculateDiff(MyDiffUtilCallback(array , adapterList))
         diffResult.dispatchUpdatesTo(this)

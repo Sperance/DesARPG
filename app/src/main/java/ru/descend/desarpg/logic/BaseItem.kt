@@ -3,6 +3,7 @@ package ru.descend.desarpg.logic
 import android.graphics.Color
 import androidx.annotation.ColorInt
 import kotlinx.serialization.Serializable
+import ru.descend.desarpg.room.datas.items.RoomItems
 
 @Serializable
 enum class EnumItemRarity(val rarityName: String, @ColorInt val rarityColor: Int) {
@@ -13,9 +14,18 @@ enum class EnumItemRarity(val rarityName: String, @ColorInt val rarityColor: Int
 }
 
 @Serializable
-sealed class BaseItem {
-    abstract val name: String
-    abstract var rarity: EnumItemRarity
+enum class EnumItemType(val typeName: String) {
+    ITEM("Предмет"),
+    EQUIPMENT("Экипировка")
+}
+
+@Serializable
+class BaseItem(
+    var name: String,
+    var rarity: EnumItemRarity,
+    var type: EnumItemType
+    ) {
+
     var count = 1
     var description: String = ""
     var paramsBool: ArrayList<StockStatsBool> = arrayListOf()
@@ -26,16 +36,8 @@ sealed class BaseItem {
     }
 }
 
-@Serializable
-class EquippingItem(override val name: String, override var rarity: EnumItemRarity) : BaseItem()
-
-@Serializable
-class SimpleItem(override val name: String, override var rarity: EnumItemRarity) : BaseItem()
-
-@Serializable
 class InventoryMob {
-    @Serializable
-    private val arrayItems = ArrayList<BaseItem>()
+    private val arrayItems = ArrayList<RoomItems>()
 
     fun getAll() = arrayItems
 
@@ -43,12 +45,17 @@ class InventoryMob {
         arrayItems.clear()
     }
 
-    fun addToInventory(item: BaseItem) {
-        val findedItem = arrayItems.find { it.name == item.name && it is SimpleItem }
+    fun addToInventory(item: RoomItems) {
+        val findedItem = arrayItems.find { it.name == item.name }
         if (findedItem != null) {
             findedItem.count++
         } else {
             arrayItems.add(item)
         }
+    }
+
+    fun setInventory(items: Collection<RoomItems>) {
+        arrayItems.clear()
+        arrayItems.addAll(items)
     }
 }

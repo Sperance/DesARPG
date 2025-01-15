@@ -22,8 +22,7 @@ data class RoomMobs(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "UUID") val mobUUID: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "level") val mobLevel: Byte = 1,
-    @ColumnInfo(name = "battleStats") var battleStatsStr: String = "",
-    @ColumnInfo(name = "inventoryMob") var inventoryMobStr: String = "",
+    @ColumnInfo(name = "battleStats") var battleStatsStr: String = ""
 ) {
     @Ignore var battleStats = BattleStats()
     @Ignore var inventoryItems = InventoryMob()
@@ -40,12 +39,10 @@ data class RoomMobs(
 
     fun toSerializeRoom() {
         battleStatsStr = Json.encodeToString(this.battleStats)
-        inventoryMobStr = Json.encodeToString(this.inventoryItems)
     }
 
     fun fromSerializeRoom() {
         battleStats = Json.decodeFromString<BattleStats>(battleStatsStr)
-        inventoryItems = Json.decodeFromString<InventoryMob>(inventoryMobStr)
     }
 }
 

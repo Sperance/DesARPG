@@ -28,7 +28,6 @@
         android:layout_marginTop="6dp"
         app:cardStrokeColor="@color/defaultStrokeColor"
         app:cardStrokeWidth="2dp"
-        app:text="SampleText"
         app:mainTextStyle="bold"
         app:postfixTextStyle="normal"
         app:textGravity="right"

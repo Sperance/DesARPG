@@ -1,11 +1,11 @@
 package ru.descend.desarpg.ui.adapters
 
 import ru.descend.desarpg.databinding.AdapterItemInventoryMobBinding
-import ru.descend.desarpg.logic.BaseItem
+import ru.descend.desarpg.room.datas.items.RoomItems
 
-class AdapterInventoryItems : DesAdapter<BaseItem, AdapterItemInventoryMobBinding>(AdapterItemInventoryMobBinding::class) {
+class AdapterInventoryItems : DesAdapter<RoomItems, AdapterItemInventoryMobBinding>(AdapterItemInventoryMobBinding::class) {
     override fun onBindItem(
-        item: BaseItem,
+        item: RoomItems,
         binding: AdapterItemInventoryMobBinding
     ) {
         binding.textItemName.setText(item.name)
@@ -15,7 +15,7 @@ class AdapterInventoryItems : DesAdapter<BaseItem, AdapterItemInventoryMobBindin
         binding.textCount.setMaybeText(item.count)
     }
 
-    override fun isAreContentsTheSame(itemNew: BaseItem, itemOld: BaseItem): Boolean? {
+    override fun isAreContentsTheSame(itemNew: RoomItems, itemOld: RoomItems): Boolean {
         return false
     }
 }

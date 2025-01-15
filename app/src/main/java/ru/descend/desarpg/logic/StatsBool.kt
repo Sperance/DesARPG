@@ -20,7 +20,7 @@ abstract class StockSimpleStat<T> (
 }
 
 @Serializable
-abstract class StockStatsBool(
+sealed class StockStatsBool(
     override val name: String,
 ) : StockSimpleStat<Boolean>() {
     override fun get() = value
@@ -30,7 +30,7 @@ abstract class StockStatsBool(
 }
 
 @Serializable
-abstract class StockStatsValue(
+sealed class StockStatsValue(
     override val name: String
 ) : StockSimpleStat<Int>() {
     override fun get() = value
@@ -42,6 +42,7 @@ abstract class StockStatsValue(
 
 @Serializable
 sealed class StockSimpleStatsBool {
+    @Serializable class IsEquipped(override var value: Boolean) : StockStatsBool("Экипирован")
     @Serializable class IsCanSell(override var value: Boolean) : StockStatsBool("Можно продавать")
     @Serializable class IsCanTrade(override var value: Boolean) : StockStatsBool("Можно торговать")
 }

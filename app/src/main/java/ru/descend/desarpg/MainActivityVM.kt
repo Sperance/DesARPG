@@ -3,19 +3,21 @@ package ru.descend.desarpg
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import ru.descend.desarpg.room.AppDatabase
 import ru.descend.desarpg.room.datas.RoomMobs
+import ru.descend.desarpg.room.datas.items.ItemsRepository
+
 fun MainActivityVM.launch(body: suspend () -> Unit) = viewModelScope.launch { body.invoke() }
 class MainActivityVM(app: Application) : AndroidViewModel(app) {
 
     private val dataBase = AppDatabase(app)
+    val repoItems = ItemsRepository(dataBase.daoItems())
     lateinit var currentMob: RoomMobs
 
     fun initialize(str: String) = viewModelScope.launch {
         clearAllMobs()
-        clearAllItems()
+        repoItems.deleteAll()
         log("[CLEARS COMPLETED] $str ${this.hashCode()}")
         if (dataBase.daoMobs().getAll().isEmpty()) {
             val pers1 = RoomMobs(name = "Игрок")
@@ -36,16 +38,20 @@ class MainActivityVM(app: Application) : AndroidViewModel(app) {
 
     fun updateMob() = viewModelScope.launch {
         currentMob.toSerializeRoom()
-        println("UPDATED: " + dataBase.daoMobs().update(currentMob))
+        dataBase.daoMobs().update(currentMob)
+
+        println("BEFORE: $currentMob")
+
+        val allMobs = dataBase.daoMobs().getAll()
+        currentMob = allMobs.last()
+        currentMob.fromSerializeRoom()
+
+        println("AFTER: $currentMob")
     }
 
     suspend fun getAllMobs() = dataBase.daoMobs().getAll()
 
     suspend fun clearAllMobs() {
         dataBase.daoMobs().deleteAll()
-    }
-
-    suspend fun clearAllItems() {
-        dataBase.daoItems().deleteAll()
     }
 }
