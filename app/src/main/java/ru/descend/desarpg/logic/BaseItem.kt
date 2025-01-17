@@ -20,20 +20,12 @@ enum class EnumItemType(val typeName: String) {
 }
 
 @Serializable
-class BaseItem(
-    var name: String,
-    var rarity: EnumItemRarity,
-    var type: EnumItemType
-    ) {
-
-    var count = 1
-    var description: String = ""
-    var paramsBool: ArrayList<StockStatsBool> = arrayListOf()
-    var paramsValue: ArrayList<StockStatsValue> = arrayListOf()
-
-    override fun toString(): String {
-        return "BaseItem(name='$name', rarity=$rarity, description='$description', paramsBool=$paramsBool, paramsValue=$paramsValue)"
-    }
+enum class EnumItemSubtype(val subtypeName: String) {
+    HELMET("Шлем"),
+    BODY("Доспех"),
+    GLOVES("Перчатки"),
+    RING("Кольцо"),
+    BOOTS("Сапоги"),
 }
 
 class InventoryMob {

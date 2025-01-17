@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import ru.descend.desarpg.room.converters.StockStatsBoolConverter
+import ru.descend.desarpg.room.converters.StockStatsValueConverter
 import ru.descend.desarpg.room.datas.DaoMobs
 import ru.descend.desarpg.room.datas.RoomMobs
 import ru.descend.desarpg.room.datas.items.DaoItems
@@ -14,6 +17,7 @@ import java.util.UUID
 [RoomItems::class, RoomMobs::class],
     version = 1,
     exportSchema = true)
+@TypeConverters(StockStatsBoolConverter::class, StockStatsValueConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun daoItems(): DaoItems
     abstract fun daoMobs(): DaoMobs
