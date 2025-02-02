@@ -19,20 +19,11 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MainActivityVM by viewModels()
-//    private lateinit var db: AppDatabase
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel.initialize()
-
-        //Убираем системный appBar с экрана
-        //enableEdgeToEdge()
-
-        //Устанавливаем постоянную ночную тему
-        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
+        enableEdgeToEdge()
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -42,11 +33,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        //Инициализация ROOM базы
-//        db = AppDatabase(this@MainActivity)
-
-        //Инициализация главной ViewModel
-        log("start init")
+        viewModel.currentBox = (application as AppController).curBoxStore
 
         setSupportActionBar(binding.toolbar)
         navController = findNavController(R.id.fragment)

@@ -3,15 +3,14 @@ package ru.descend.desarpg
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import io.objectbox.BoxStore
 import kotlinx.coroutines.launch
 import ru.descend.desarpg.room.datas.mobs.RoomMobs
 
 fun MainActivityVM.launch(body: suspend () -> Unit) = viewModelScope.launch { body.invoke() }
 class MainActivityVM(app: Application) : AndroidViewModel(app) {
 
-//    private val dataBase = AppDatabase(app)
-//    val repoItems = ItemsRepository(dataBase.daoItems())
-//    val repoMobs = MobsRepository(dataBase.daoMobs())
+    lateinit var currentBox: BoxStore
     lateinit var currentMob: RoomMobs
 
     fun initialize() = viewModelScope.launch {

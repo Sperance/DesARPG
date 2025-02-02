@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.objectbox)
+    id("io.objectbox")
+    id("kotlin-android")
+    id("kotlin-kapt")
 }
 
 android {
