@@ -1,11 +1,8 @@
 package ru.descend.desarpg.logic
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import ru.descend.desarpg.addPercent
 import ru.descend.desarpg.to1Digits
 
-@Serializable
 abstract class Prop {
     abstract val name: String
     var description: String = ""
@@ -25,7 +22,6 @@ abstract class Prop {
     fun addPercent(newValue: Number) { percent = (percent + newValue.toDouble()).to1Digits() }
 }
 
-@Serializable
 abstract class StockStatsProp(override var name: String) : Prop() {
     @Transient private var currentValue = 0.0
     @Transient lateinit var stats: BattleStats
@@ -47,24 +43,22 @@ abstract class StockStatsProp(override var name: String) : Prop() {
     }
 }
 
-@Serializable
 sealed class StockStats {
-    @Serializable class StockStatHealth : StockStatsProp("Health") {
+    class StockStatHealth : StockStatsProp("Health") {
         override fun get(): Double {
             return super.get() + (stats.strength.getCurrentForGlobalStats() * stats.healthForStrength.getCurrentForGlobalStats()).to1Digits()
         }
     }
-    @Serializable class StockStatAttack : StockStatsProp("Damage") {
+    class StockStatAttack : StockStatsProp("Damage") {
         override fun get(): Double {
             return super.get() + (stats.strength.getCurrentForGlobalStats() * stats.attackForStrength.getCurrentForGlobalStats()).to1Digits()
         }
     }
-    @Serializable class StockStatStrength : StockStatsProp("Strength")
-    @Serializable class StockStatHealthForStrength : StockStatsProp("HealthForStrength")
-    @Serializable class StockStatAttackForStrength : StockStatsProp("AttackForStrength")
+    class StockStatStrength : StockStatsProp("Strength")
+    class StockStatHealthForStrength : StockStatsProp("HealthForStrength")
+    class StockStatAttackForStrength : StockStatsProp("AttackForStrength")
 }
 
-@Serializable
 class BattleStats {
     var health = StockStats.StockStatHealth()
     var attackPhysic = StockStats.StockStatAttack()

@@ -12,20 +12,20 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import ru.descend.desarpg.databinding.ActivityMainBinding
-import ru.descend.desarpg.room.AppDatabase
+//import ru.descend.desarpg.room.AppDatabase
 
 class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MainActivityVM by viewModels()
-    private lateinit var db: AppDatabase
+//    private lateinit var db: AppDatabase
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.initialize(this.hashCode().toString())
+        viewModel.initialize()
 
         //Убираем системный appBar с экрана
         //enableEdgeToEdge()
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Инициализация ROOM базы
-        db = AppDatabase(this@MainActivity)
+//        db = AppDatabase(this@MainActivity)
 
         //Инициализация главной ViewModel
         log("start init")

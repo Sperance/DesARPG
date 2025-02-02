@@ -1,6 +1,6 @@
 package ru.descend.desarpg.logic
 
-import ru.descend.desarpg.room.datas.RoomMobs
+import ru.descend.desarpg.room.datas.mobs.RoomMobs
 
 class ItemListener(val name: String) {
     private val listenersArray: ArrayList<() -> Unit> = ArrayList()

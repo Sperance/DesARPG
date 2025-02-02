@@ -1,10 +1,9 @@
 package ru.descend.desarpg.logic
 
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.Test
-import ru.descend.desarpg.room.datas.RoomMobs
+import ru.descend.desarpg.room.datas.mobs.RoomMobs
 import ru.descend.desarpg.room.datas.items.RoomItems
+import java.io.File
 
 class TestGame {
 
@@ -23,6 +22,34 @@ class TestGame {
         newEquipItem.addParam(StockSimpleStatsValue.MaxPrefix(-3))
         sell = newEquipItem.getValueResult(StockSimpleStatsValue.MaxPrefix::class)
         println("mod: $sell")
+    }
+
+    fun findClassesInDirectory(directory: String): List<Class<*>> {
+        val classes = mutableListOf<Class<*>>()
+        val dir = File(directory)
+
+        // Проверяем, что это директория
+        if (dir.exists() && dir.isDirectory) {
+            // Проходим по всем файлам и поддиректориям
+            dir.walk().forEach { file ->
+                if (file.isFile && file.extension == "class") {
+                    // Получаем имя класса без расширения
+                    val className = file.relativeTo(dir).path
+                        .removeSuffix(".class")
+                        .replace(File.separatorChar, '.')
+
+                    try {
+                        // Загружаем класс по имени
+                        val clazz = Class.forName(className)
+                        classes.add(clazz)
+                    } catch (e: ClassNotFoundException) {
+                        e.printStackTrace() // Обработка исключений, если класс не найден
+                    }
+                }
+            }
+        }
+
+        return classes
     }
 
     @Test
@@ -57,27 +84,6 @@ class TestGame {
 //        val newItem = Json.decodeFromString<EquippingItem>(string)
 //        println("after: $newItem")
 //    }
-
-    @Test
-    fun testSerialization() {
-        val pers1 = RoomMobs(name = "Игрок")
-        pers1.battleStats.attackPhysic.set(25)
-        pers1.battleStats.attackPhysic.setPercent(10)
-        pers1.battleStats.health.set(12.5)
-        pers1.battleStats.strength.set(3)
-        pers1.battleStats.health.setPercent(10.2)
-
-        println("health: ${pers1.battleStats.health}")
-
-        val string = Json.encodeToString(pers1)
-        println("before: ${pers1.battleStats}")
-        println(string)
-
-        pers1.battleStats.health.set(42.5)
-
-        val newPers = Json.decodeFromString<RoomMobs>(string)
-        println("health: ${newPers.battleStats.health}")
-    }
 
     @Test
     fun test1() {

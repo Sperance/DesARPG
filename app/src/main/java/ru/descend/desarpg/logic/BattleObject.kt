@@ -1,7 +1,7 @@
 package ru.descend.desarpg.logic
 
 import kotlinx.coroutines.delay
-import ru.descend.desarpg.room.datas.RoomMobs
+import ru.descend.desarpg.room.datas.mobs.RoomMobs
 
 class BattleObject(private val person1: RoomMobs, private val person2: RoomMobs) {
 

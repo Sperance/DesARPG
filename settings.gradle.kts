@@ -7,20 +7,26 @@ pluginManagement {
                 includeGroupByRegex("androidx.*")
             }
         }
+        google()
         mavenCentral()
         gradlePluginPortal()
-        jcenter()
+    }
+
+    plugins {
+        id("com.android.application") version "8.2.2" apply false
+        id("org.jetbrains.kotlin.android") version "2.1.0" apply false
+        id("io.objectbox") version "4.1.0" apply false
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
-        jcenter()
+        gradlePluginPortal()
     }
 }
 
 rootProject.name = "DesARPG"
 include(":app")
- 

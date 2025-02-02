@@ -17,29 +17,29 @@ class FragmentMobInventory : BaseFragment<FragmentMobInventoryBinding>(FragmentM
     override fun setUpViews() {
         binding.buttonAddSimpleItem.setOnClickListener {
             val newSimpleItem = RoomItems(name = "Сфера запаса", rarity = EnumItemRarity.RARITY, type = EnumItemType.ITEM)
-            viewModel.repoItems.insert(newSimpleItem)
+//            viewModel.repoItems.insert(newSimpleItem)
         }
         binding.buttonAddEquipItem.setOnClickListener {
             val newEquipItem = RoomItems(name = "Меч Жнеца", rarity = EnumItemRarity.MAGIC, type = EnumItemType.EQUIPMENT)
             newEquipItem.description = "Меч который может Всё"
             newEquipItem.paramsBool.add(StockSimpleStatsBool.IsCanSell(false))
             newEquipItem.paramsValue.add(StockSimpleStatsValue.MaxPrefix(2))
-            viewModel.repoItems.insert(newEquipItem)
+//            viewModel.repoItems.insert(newEquipItem)
         }
         binding.buttonClearItems.setOnClickListener {
-            viewModel.repoItems.deleteAll()
+//            viewModel.repoItems.deleteAll()
         }
         initRecyclers()
         initObservers()
     }
 
     private fun initObservers() {
-        viewModel.repoItems.allItems.observe(this) { data ->
-            log("[OBSERVE ITEMS]: $data")
-            viewModel.currentMob.inventoryItems.clearInventory()
-            viewModel.currentMob.inventoryItems.setInventory(data)
-            adapterInventory.onNewData(data)
-        }
+//        viewModel.repoItems.allItems.observe(this) { data ->
+//            log("[OBSERVE ITEMS]: $data")
+//            viewModel.currentMob.inventoryItems.clearInventory()
+//            viewModel.currentMob.inventoryItems.setInventory(data)
+//            adapterInventory.onNewData(data)
+//        }
     }
 
     private fun initRecyclers() {

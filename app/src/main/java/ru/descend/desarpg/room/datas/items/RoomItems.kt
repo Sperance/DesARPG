@@ -1,7 +1,5 @@
 package ru.descend.desarpg.room.datas.items
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import ru.descend.desarpg.log
 import ru.descend.desarpg.logic.EnumItemRarity
 import ru.descend.desarpg.logic.EnumItemType
@@ -10,9 +8,8 @@ import ru.descend.desarpg.logic.StockStatsBool
 import ru.descend.desarpg.logic.StockStatsValue
 import kotlin.reflect.KClass
 
-@Entity("items_table")
 data class RoomItems(
-    @PrimaryKey(autoGenerate = true) val itemId: Int = 0,
+    val itemId: Int = 0,
     var name: String,
     var description: String = "",
     var rarity: EnumItemRarity = EnumItemRarity.DEFAULT,

@@ -1,14 +1,7 @@
 package ru.descend.desarpg.logic
 
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
+import ru.descend.desarpg.log
 
-@Serializable
 abstract class StockSimpleStat<T> (
     var description: String = ""
 ) {
@@ -24,7 +17,6 @@ abstract class StockSimpleStat<T> (
     }
 }
 
-@Serializable
 sealed class StockStatsBool(
     override val name: String,
     override val code: String,
@@ -35,7 +27,6 @@ sealed class StockStatsBool(
     }
 }
 
-@Serializable
 sealed class StockStatsValue(
     override val name: String,
     override val code: String,
@@ -48,27 +39,13 @@ sealed class StockStatsValue(
 }
 
 sealed class StockSimpleStatsBool {
-    @Serializable class IsEquipped(override var value: Boolean) : StockStatsBool("Экипирован", "bEQ")
-    @Serializable class IsCanSell(override var value: Boolean) : StockStatsBool("Можно продавать", "bCS")
-    @Serializable class IsCanTrade(override var value: Boolean) : StockStatsBool("Можно торговать", "bCT")
+    class IsEquipped(override var value: Boolean) : StockStatsBool("Экипирован", "bEQ")
+    class IsCanSell(override var value: Boolean) : StockStatsBool("Можно продавать", "bCS")
+    class IsCanTrade(override var value: Boolean) : StockStatsBool("Можно торговать", "bCT")
 }
 
 sealed class StockSimpleStatsValue {
-    @Serializable class MaxPrefix(override var value: Int) : StockStatsValue("Максимальное кол-во префиксов", "vMaxPref")
-    @Serializable class MaxSuffix(override var value: Int) : StockStatsValue("Максимальное кол-во суффиксов", "vMaxSuf")
-    @Serializable class MaxPostfix(override var value: Int) : StockStatsValue("Максимальное кол-во постфиксов", "vMaxPost")
+    class MaxPrefix(override var value: Int) : StockStatsValue("Максимальное кол-во префиксов", "vMaxPref")
+    class MaxSuffix(override var value: Int) : StockStatsValue("Максимальное кол-во суффиксов", "vMaxSuf")
+    class MaxPostfix(override var value: Int) : StockStatsValue("Максимальное кол-во постфиксов", "vMaxPost")
 }
-
-//interface StockStatsBoolSerializer<T: StockStatsBool> : KSerializer<T> {
-//    override val descriptor: SerialDescriptor get() = PrimitiveSerialDescriptor("StockStatsBool", PrimitiveKind.STRING)
-//
-//    override fun serialize(encoder: Encoder, value: T) {
-//        val string = value.code + ":" + value.value
-//        encoder.encodeString(string)
-//    }
-//
-//    override fun deserialize(decoder: Decoder): T {
-//        val string = decoder.decodeString().split(":")
-//        return StockStatsBool.
-//    }
-//}

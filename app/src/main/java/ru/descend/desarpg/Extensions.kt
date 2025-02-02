@@ -1,7 +1,10 @@
 package ru.descend.desarpg
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
+import java.io.File
+import kotlin.reflect.KClass
 
 @SuppressLint("DefaultLocale")
 fun Double.to1Digits() = String.format("%.1f", this).replace(",", ".").toDouble()
@@ -25,8 +28,8 @@ fun Double.removePercent(value: Double) : Double {
     return (this - getPercent(value)).to1Digits()
 }
 
-fun log(textLog: String) {
-    if (textLog.trim { it <= ' ' }.isNotEmpty()) Log.e("DES_LOG",   stackTraceLog(Thread.currentThread().stackTrace) + ": " + textLog)
+fun log(textLog: Any) {
+    if (textLog.toString().trim { it <= ' ' }.isNotEmpty()) Log.e("DES_LOG",   stackTraceLog(Thread.currentThread().stackTrace) + ": " + textLog)
 }
 
 private fun stackTraceLog(trace: Array<StackTraceElement>): String {
