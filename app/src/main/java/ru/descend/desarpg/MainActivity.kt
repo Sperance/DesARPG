@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.currentBox = (application as AppController).curBoxStore
+        viewModel.initialize()
 
         setSupportActionBar(binding.toolbar)
         navController = findNavController(R.id.fragment)

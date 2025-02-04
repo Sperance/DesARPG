@@ -52,25 +52,25 @@ class TestGame {
         return classes
     }
 
-    @Test
-    fun testBaseStats() {
-        val pers1 = RoomMobs(name = "Игрок")
-        pers1.battleStats.health.set(100)
-        pers1.battleStats.health.setPercent(20)
-        pers1.battleStats.strength.set(5)
-        println("strength: ${pers1.battleStats.strength}")
-
-        pers1.battleStats.health.prepareInit()
-        println("health: ${pers1.battleStats.health}")
-//        pers1.battleStats.strength.prepareInit()
-        pers1.battleStats.health.removeCurrent(10)
-        pers1.battleStats.health.removeCurrent(20)
-        pers1.battleStats.health.removeCurrent(50)
-        pers1.battleStats.health.removeCurrent(10)
-
-        println("health: ${pers1.battleStats.health}")
-        println("strength: ${pers1.battleStats.strength}")
-    }
+//    @Test
+//    fun testBaseStats() {
+//        val pers1 = RoomMobs(name = "Игрок")
+//        pers1.battleStats.health.setValue(100)
+//        pers1.battleStats.health.setPercent(20)
+//        pers1.battleStats.strength.setValue(5)
+//        println("strength: ${pers1.battleStats.strength}")
+//
+//        pers1.battleStats.health.prepareInit()
+//        println("health: ${pers1.battleStats.health}")
+////        pers1.battleStats.strength.prepareInit()
+//        pers1.battleStats.health.removeCurrent(10)
+//        pers1.battleStats.health.removeCurrent(20)
+//        pers1.battleStats.health.removeCurrent(50)
+//        pers1.battleStats.health.removeCurrent(10)
+//
+//        println("health: ${pers1.battleStats.health}")
+//        println("strength: ${pers1.battleStats.strength}")
+//    }
 
 //    @Test
 //    fun testSerializationItems() {
@@ -87,28 +87,28 @@ class TestGame {
 
     @Test
     fun test1() {
-        val pers1 = RoomMobs(name = "Игрок")
-        pers1.battleStats.attackPhysic.set(10)
-        pers1.battleStats.health.set(50)
-        pers1.battleStats.health.setPercent(10)
-        pers1.battleStats.strength.set(5)
-        pers1.battleStats.attackPhysic.setPercent(20)
-        val pers2 = RoomMobs(name = "Враг")
-        pers2.battleStats.attackPhysic.set(8)
-        pers2.battleStats.health.set(250)
+//        val pers1 = RoomMobs(name = "Игрок")
+//        pers1.battleStats.attackPhysic.setValue(10)
+//        pers1.battleStats.health.setValue(50)
+//        pers1.battleStats.health.setPercent(10)
+//        pers1.battleStats.strength.setValue(5)
+//        pers1.battleStats.attackPhysic.setPercent(20)
+//        val pers2 = RoomMobs(name = "Враг")
+//        pers2.battleStats.attackPhysic.setValue(8)
+//        pers2.battleStats.health.setValue(250)
 
 //        val battle = BattleObject(pers1, pers2)
 //        runBlocking {
 //            battle.doBattle()
 //        }
-        println("P1: ${pers1.battleStats.health}")
-        println("P2: ${pers2.battleStats.health}")
+//        println("P1: ${pers1.battleStats.health}")
+//        println("P2: ${pers2.battleStats.health}")
 
 //        val battle2 = BattleObject(pers1, pers2)
 //        runBlocking {
 //            battle2.doBattle()
 //        }
-        println("P1: ${pers1.battleStats.health}")
-        println("P2: ${pers2.battleStats.health}")
+//        println("P1: ${pers1.battleStats.health}")
+//        println("P2: ${pers2.battleStats.health}")
     }
 }

@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewbinding.ViewBinding
+import io.objectbox.BoxStore
 import ru.descend.desarpg.MainActivityVM
+import ru.descend.desarpg.room.datas.mobs.RoomMobs
 
 typealias Inflate<T> = (LayoutInflater, ViewGroup?, Boolean) -> T
 

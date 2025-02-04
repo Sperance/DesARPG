@@ -1,37 +1,41 @@
 package ru.descend.desarpg.ui
 
 import ru.descend.desarpg.databinding.FragmentMobMainBinding
+import ru.descend.desarpg.logic.EnumPropsType
 
 class FragmentMobMain : BaseFragment<FragmentMobMainBinding>(FragmentMobMainBinding::inflate) {
 
     private fun initBaseStats() {
         binding.textMobName.setText(viewModel.currentMob.name)
-        binding.textMobHealth.setProperty(viewModel.currentMob.battleStats.health)
-        binding.textMobAttack.setProperty(viewModel.currentMob.battleStats.attackPhysic)
-        binding.textMobStrength.setProperty(viewModel.currentMob.battleStats.strength)
+        binding.textMobHealth.setProperty(viewModel.currentMob.battleStats.target.getCalcHealth())
+//        binding.textMobAttack.setProperty(viewModel.currentMob.battleStats.target.getStat(EnumPropsType.PHYSIC_ATTACK))
+        binding.textMobStrength.setProperty(viewModel.currentMob.battleStats.target.getCalcStrength())
     }
 
     override fun setUpViews() {
         initBaseStats()
         binding.buttonHealthTo50.setOnClickListener {
-            viewModel.currentMob.battleStats.health.set(50)
-            viewModel.currentMob.battleStats.health.setPercent(10)
-            viewModel.updateMob()
+            val stat = viewModel.currentMob.battleStats.target.getStat(EnumPropsType.HEALTH)
+            stat!!.setValue(50)
+            viewModel.currentMob.battleStats.target.save(viewModel.currentBox)
             initBaseStats()
         }
         binding.buttonHealthAdd.setOnClickListener {
-            viewModel.currentMob.battleStats.health.add(2)
-            viewModel.updateMob()
+            val stat = viewModel.currentMob.battleStats.target.getStat(EnumPropsType.HEALTH)
+            stat!!.addValue(2)
+            viewModel.currentMob.battleStats.target.save(viewModel.currentBox)
             initBaseStats()
         }
         binding.buttonStrengthAdd.setOnClickListener {
-            viewModel.currentMob.battleStats.strength.add(1)
-            viewModel.updateMob()
+            val stat = viewModel.currentMob.battleStats.target.getStat(EnumPropsType.STRENGTH)
+            stat!!.addValue(1)
+            viewModel.currentMob.battleStats.target.save(viewModel.currentBox)
             initBaseStats()
         }
         binding.buttonStrengthAddPercent.setOnClickListener {
-            viewModel.currentMob.battleStats.strength.addPercent(5)
-            viewModel.updateMob()
+            val stat = viewModel.currentMob.battleStats.target.getStat(EnumPropsType.STRENGTH)
+            stat!!.addPercent(5)
+            viewModel.currentMob.battleStats.target.save(viewModel.currentBox)
             initBaseStats()
         }
     }
