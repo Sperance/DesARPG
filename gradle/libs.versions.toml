@@ -32,4 +32,3 @@ objectbox-android = { group = "io.objectbox", name = "objectbox-android", versio
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-objectbox = { id = "io.objectbox", version.ref = "objectbox" }

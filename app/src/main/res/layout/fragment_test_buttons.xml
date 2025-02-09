@@ -7,8 +7,8 @@
     tools:context=".ui.FragmentTestButtons">
 
     <Button
-        android:id="@+id/buttonShowMobs"
-        android:text="Показать список Mobs"
+        android:id="@+id/buttonShowAllStats"
+        android:text="Показать все статы в лог"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

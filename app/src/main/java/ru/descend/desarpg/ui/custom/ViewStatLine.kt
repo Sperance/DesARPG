@@ -15,7 +15,7 @@ import androidx.annotation.Dimension
 import androidx.core.content.ContextCompat
 import ru.descend.desarpg.R
 import ru.descend.desarpg.databinding.ViewStatLineBinding
-import ru.descend.desarpg.logic.StockStatsProp
+import ru.descend.desarpg.model.StockStatsProp
 import ru.descend.desarpg.to0Text
 
 class ViewStatLine @JvmOverloads constructor(
@@ -141,8 +141,9 @@ class ViewStatLine @JvmOverloads constructor(
 
     fun setProperty(prop: StockStatsProp?) {
         if (prop == null) return
+        val textSymbol = if (prop.getPercent() < 0) "" else "+"
         this.text = prop.getCurrentForGlobalStats().to0Text()
-        this.textPostfix = " (${prop.getValue().to0Text()} + ${prop.getPercent().to0Text()}%)"
+        this.textPostfix = " (${prop.getValue().to0Text()} $textSymbol${prop.getPercent().to0Text()}%)"
         applyValues()
     }
 

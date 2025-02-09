@@ -1,7 +1,7 @@
-package ru.descend.desarpg.logic.converters
+package ru.descend.desarpg.model.converters
 
 import io.objectbox.converter.PropertyConverter
-import ru.descend.desarpg.logic.EnumPropsType
+import ru.descend.desarpg.model.EnumPropsType
 
 class EnumPropsTypeConverter : PropertyConverter<EnumPropsType, String> {
     override fun convertToEntityProperty(databaseValue: String?): EnumPropsType {

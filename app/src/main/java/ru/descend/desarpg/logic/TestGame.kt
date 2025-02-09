@@ -1,28 +1,9 @@
 package ru.descend.desarpg.logic
 
 import org.junit.Test
-import ru.descend.desarpg.room.datas.mobs.RoomMobs
-import ru.descend.desarpg.room.datas.items.RoomItems
 import java.io.File
 
 class TestGame {
-
-    @Test
-    fun test_catch_rser() {
-        val newEquipItem = RoomItems(name = "Меч Жнеца", rarity = EnumItemRarity.MAGIC, type = EnumItemType.EQUIPMENT)
-        newEquipItem.description = "Меч который может Всё"
-        newEquipItem.addParam(StockSimpleStatsBool.IsCanSell(true))
-        newEquipItem.addParam(StockSimpleStatsBool.IsEquipped(false))
-        newEquipItem.addParam(StockSimpleStatsValue.MaxPrefix(5))
-
-        var sell = newEquipItem.getValueResult(StockSimpleStatsValue.MaxPrefix::class)
-        println("mod: $sell")
-
-//        newEquipItem.setStockParam(StockSimpleStatsBool.IsCanSell(false))
-        newEquipItem.addParam(StockSimpleStatsValue.MaxPrefix(-3))
-        sell = newEquipItem.getValueResult(StockSimpleStatsValue.MaxPrefix::class)
-        println("mod: $sell")
-    }
 
     fun findClassesInDirectory(directory: String): List<Class<*>> {
         val classes = mutableListOf<Class<*>>()
