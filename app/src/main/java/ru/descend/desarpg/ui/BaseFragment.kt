@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.viewbinding.ViewBinding
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.descend.desarpg.MainActivityVM
 
 typealias Inflate<T> = (LayoutInflater, ViewGroup?, Boolean) -> T
 
 abstract class BaseFragment<VBinding : ViewBinding>(private val inflate: Inflate<VBinding>) : Fragment() {
 
-    val viewModel: MainActivityVM by activityViewModels()
+    val viewModel: MainActivityVM by activityViewModel()
     private var _binding: VBinding? = null
     val binding get() = _binding!!
 

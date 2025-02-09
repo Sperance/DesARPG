@@ -2,20 +2,18 @@ package ru.descend.desarpg
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import io.objectbox.BoxStore
-import ru.descend.desarpg.model.MyObjectBox
-import java.io.File
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import ru.descend.desarpg.koin.objectBoxModule
+import ru.descend.desarpg.koin.viewModelModule
 
 class AppController : Application() {
-
-    lateinit var curBoxStore: BoxStore
-
     override fun onCreate() {
         super.onCreate()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
-        curBoxStore = MyObjectBox.builder().baseDirectory(File(filesDir, "db")) .androidContext(this).build()
-        curBoxStore.removeAllObjects()
-        log("[DB: ${filesDir.absolutePath}]")
+        startKoin {
+            androidContext(this@AppController)
+            modules(objectBoxModule, viewModelModule)
+        }
     }
 }

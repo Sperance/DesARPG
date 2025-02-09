@@ -3,7 +3,6 @@ package ru.descend.desarpg.model
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
-import java.util.UUID
 
 @Entity
 open class Mob(@Id var id: Long = 0,
@@ -12,7 +11,6 @@ open class Mob(@Id var id: Long = 0,
 
 @Entity
 class RoomMobs(
-    name: String = "",
     var power: Double = 0.0
 ) : Mob() {
     lateinit var battleStats: ToOne<MobBattleStats>

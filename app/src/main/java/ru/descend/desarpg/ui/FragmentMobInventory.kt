@@ -2,10 +2,12 @@ package ru.descend.desarpg.ui
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.descend.desarpg.databinding.FragmentMobInventoryBinding
+import ru.descend.desarpg.log
 
 class FragmentMobInventory : BaseFragment<FragmentMobInventoryBinding>(FragmentMobInventoryBinding::inflate) {
 
     override fun setUpViews() {
+        log("FragmentMobInventory VM: ${viewModel.hashCode()}")
         binding.buttonAddSimpleItem.setOnClickListener {
 
         }

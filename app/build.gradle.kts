@@ -62,4 +62,6 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.objectbox.kotlin)
     implementation(libs.objectbox.android)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
 }
