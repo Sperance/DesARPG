@@ -16,5 +16,8 @@ class FragmentMain : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         binding.buttonToInventory.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentMain_to_fragmentMobInventory)
         }
+        binding.buttonToSkillTree.setOnClickListener {
+            findNavController().navigate(R.id.action_fragmentMain_to_fragmentSkillTree)
+        }
     }
 }

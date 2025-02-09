@@ -174,9 +174,43 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "22:3078629670302274404",
+      "lastPropertyId": "5:845051531603517937",
+      "name": "SkillNodeEntity",
+      "properties": [
+        {
+          "id": "1:4442057611220353532",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:530595682631038311",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:3352219153721042007",
+          "name": "positionX",
+          "type": 7
+        },
+        {
+          "id": "4:4931992254036803309",
+          "name": "positionY",
+          "type": 7
+        },
+        {
+          "id": "5:845051531603517937",
+          "name": "isActivated",
+          "type": 1
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "21:2393029620287331803",
+  "lastEntityId": "22:3078629670302274404",
   "lastIndexId": "6:861581336056346837",
   "lastRelationId": "5:3670834962437335190",
   "lastSequenceId": "0:0",

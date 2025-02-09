@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_fragmentMain_to_fragmentMobInventory"
             app:destination="@id/fragmentMobInventory" />
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentSkillTree"
+            app:destination="@id/fragmentSkillTree" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMobMain"
@@ -35,4 +38,9 @@
         android:name="ru.descend.desarpg.ui.FragmentMobInventory"
         android:label="Инвентарь"
         tools:layout="@layout/fragment_mob_inventory" />
+    <fragment
+        android:id="@+id/fragmentSkillTree"
+        android:name="ru.descend.desarpg.ui.FragmentSkillTree"
+        android:label="Дерево навыков"
+        tools:layout="@layout/fragment_skill_tree"/>
 </navigation>
