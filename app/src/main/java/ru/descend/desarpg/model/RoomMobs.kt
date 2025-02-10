@@ -2,6 +2,7 @@ package ru.descend.desarpg.model
 
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.relation.ToMany
 import io.objectbox.relation.ToOne
 
 @Entity
@@ -15,7 +16,8 @@ class RoomMobs(
 ) : Mob() {
     lateinit var battleStats: ToOne<MobBattleStats>
     lateinit var systemStats: ToOne<MobSystemStats>
+    lateinit var skillTreeStats: ToOne<MobSkillTreeStats>
     override fun toString(): String {
-        return "RoomMobs(id=$id, name='$name', battleStats=${battleStats.target}, systemStats=${systemStats.target})"
+        return "RoomMobs(id=$id, name='$name', battleStats=${battleStats.target}, systemStats=${systemStats.target}, skillTreeStats=${skillTreeStats.target})"
     }
 }

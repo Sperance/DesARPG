@@ -32,8 +32,8 @@ class SkillTreeView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private val nodes = mutableListOf<SkillNode>()
-    private val connections = mutableListOf<Pair<SkillNode, SkillNode>>()
+    private val nodes = mutableListOf<SkillNodeEntity>()
+    private val connections = mutableListOf<Pair<SkillNodeEntity, SkillNodeEntity>>()
     private val nodePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLUE
         style = Paint.Style.FILL
@@ -56,29 +56,10 @@ class SkillTreeView @JvmOverloads constructor(
     private var scaleFactor = 1f
     private val gestureDetector = GestureDetector(context, GestureListener())
 
-    // ObjectBox
-//    private lateinit var skillNodeBox: Box<SkillNodeEntity>
-
-    init {
-        // Инициализация ObjectBox
-//        val boxStore = (context.applicationContext as AppController).boxStore
-//        skillNodeBox = boxStore.boxFor(SkillNodeEntity::class.java)
-
-        // Загрузка узлов из базы данных
-//        loadNodesFromDatabase()
-
-        // Если узлов нет, добавляем пример
-        if (nodes.isEmpty()) {
-            val node1 = SkillNode(PointF(100f, 100f), "Node 1")
-            val node2 = SkillNode(PointF(300f, 300f), "Node 2")
-            val node3 = SkillNode(PointF(500f, 100f), "Node 3", ContextCompat.getDrawable(context, R.drawable.ic_android_black_24dp))
-
-            nodes.add(node1)
-            nodes.add(node2)
-            nodes.add(node3)
-
-            connections.add(node1 to node2)
-            connections.add(node2 to node3)
+    fun loadNodes(list: Collection<SkillNodeEntity>) {
+        nodes.addAll(list)
+        list.filter { it.connection != null }.forEach {
+            connections.add(it to list.find { ob -> ob.code == it.connection }!!)
         }
     }
 
@@ -103,7 +84,7 @@ class SkillTreeView @JvmOverloads constructor(
             connectionPaint.color = lineColor
 
             // Рисуем линию
-            canvas.drawLine(start.position.x, start.position.y, end.position.x, end.position.y, connectionPaint)
+            canvas.drawLine(start.positionX, start.positionY, end.positionX, end.positionY, connectionPaint)
         }
 
         // Отрисовка узлов
@@ -111,27 +92,28 @@ class SkillTreeView @JvmOverloads constructor(
             val paint = if (node.isActivated) activatedNodePaint else nodePaint
 
             // Рисуем круг (фон узла)
-            canvas.drawCircle(node.position.x, node.position.y, 50f, paint)
+            canvas.drawCircle(node.positionX, node.positionY, 50f, paint)
 
             // Если есть иконка, рисуем её
-            node.icon?.let { icon ->
+            node.iconInt?.let { iconInt ->
                 val iconSize = 80 // Размер иконки
                 val halfIconSize = iconSize / 2
+                val icon = ContextCompat.getDrawable(context, iconInt)
 
                 // Устанавливаем границы для иконки
-                icon.setBounds(
-                    (node.position.x - halfIconSize).toInt(),
-                    (node.position.y - halfIconSize).toInt(),
-                    (node.position.x + halfIconSize).toInt(),
-                    (node.position.y + halfIconSize).toInt()
+                icon?.setBounds(
+                    (node.positionX - halfIconSize).toInt(),
+                    (node.positionY - halfIconSize).toInt(),
+                    (node.positionX + halfIconSize).toInt(),
+                    (node.positionY + halfIconSize).toInt()
                 )
 
                 // Рисуем иконку
-                icon.draw(canvas)
+                icon?.draw(canvas)
             }
 
             // Рисуем текст (название узла)
-            canvas.drawText(node.name, node.position.x - 40f, node.position.y - 60f, textPaint)
+            canvas.drawText(node.name, node.positionX - 40f, node.positionY - 60f, textPaint)
         }
 
         canvas.restore()
@@ -158,10 +140,10 @@ class SkillTreeView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-    private fun findNodeAt(x: Float, y: Float): SkillNode? {
+    private fun findNodeAt(x: Float, y: Float): SkillNodeEntity? {
         for (node in nodes) {
-            val dx = x - node.position.x
-            val dy = y - node.position.y
+            val dx = x - node.positionX
+            val dy = y - node.positionY
             val distance = sqrt(dx * dx + dy * dy)
             if (distance <= 50f) { // 50f - радиус узла
                 return node
@@ -170,7 +152,7 @@ class SkillTreeView @JvmOverloads constructor(
         return null
     }
 
-    private fun canActivateNode(node: SkillNode): Boolean {
+    private fun canActivateNode(node: SkillNodeEntity): Boolean {
         // Узел может быть активирован, если он связан с хотя бы одним активированным узлом
         for (connection in connections) {
             val (start, end) = connection
@@ -182,11 +164,11 @@ class SkillTreeView @JvmOverloads constructor(
         return nodes.indexOf(node) == 0
     }
 
-    private fun showNodeDialog(node: SkillNode) {
+    private fun showNodeDialog(node: SkillNodeEntity) {
         val fragment = NodeBottomSheetFragment().apply {
             setNode(node)
             setActivationListener(object : NodeBottomSheetFragment.OnNodeActivationListener {
-                override fun onActivateNodeRequested(node: SkillNode) {
+                override fun onActivateNodeRequested(node: SkillNodeEntity) {
                     if (canActivateNode(node)) {
                         node.isActivated = true
                         saveNodesToDatabase()
@@ -196,7 +178,7 @@ class SkillTreeView @JvmOverloads constructor(
                     }
                 }
 
-                override fun onDeactivateNodeRequested(node: SkillNode) {
+                override fun onDeactivateNodeRequested(node: SkillNodeEntity) {
                     if (canDeactivateNode(node)) {
                         node.isActivated = false
                         saveNodesToDatabase()
@@ -213,19 +195,15 @@ class SkillTreeView @JvmOverloads constructor(
         }
     }
 
-    private fun canDeactivateNode(node: SkillNode): Boolean {
+    private fun canDeactivateNode(node: SkillNodeEntity): Boolean {
         if (!node.isActivated) return false // Узел не активирован
+        if (node.code == 1) return false //Нельзя деактивировать корневой узел
 
         // Проверяем, что узел связан только с одним активированным узлом
         val connectedActivatedNodes = connections
             .filter { it.first == node || it.second == node }
             .map { if (it.first == node) it.second else it.first }
             .filter { it.isActivated }
-
-        // Если это корневой узел, его можно деактивировать только если нет связанных активированных узлов
-        if (nodes.indexOf(node) == 0) {
-            return connectedActivatedNodes.isEmpty()
-        }
 
         // Для остальных узлов: можно деактивировать, если связан только с одним активированным узлом
         return connectedActivatedNodes.size == 1
@@ -289,11 +267,4 @@ class SkillTreeView @JvmOverloads constructor(
             return true
         }
     }
-
-    data class SkillNode(
-        val position: PointF,
-        val name: String,
-        val icon: Drawable? = null,
-        var isActivated: Boolean = false
-    )
 }

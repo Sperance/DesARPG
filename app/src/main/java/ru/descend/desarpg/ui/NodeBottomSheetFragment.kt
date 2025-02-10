@@ -8,18 +8,19 @@ import android.widget.Button
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ru.descend.desarpg.R
+import ru.descend.desarpg.model.SkillNodeEntity
 import ru.descend.desarpg.ui.custom.SkillTreeView
 
 class NodeBottomSheetFragment : BottomSheetDialogFragment() {
-    private lateinit var node: SkillTreeView.SkillNode
+    private lateinit var node: SkillNodeEntity
     private var activationListener: OnNodeActivationListener? = null
 
     interface OnNodeActivationListener {
-        fun onActivateNodeRequested(node: SkillTreeView.SkillNode)
-        fun onDeactivateNodeRequested(node: SkillTreeView.SkillNode)
+        fun onActivateNodeRequested(node: SkillNodeEntity)
+        fun onDeactivateNodeRequested(node: SkillNodeEntity)
     }
 
-    fun setNode(node: SkillTreeView.SkillNode) {
+    fun setNode(node: SkillNodeEntity) {
         this.node = node
     }
 

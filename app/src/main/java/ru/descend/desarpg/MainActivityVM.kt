@@ -1,15 +1,10 @@
 package ru.descend.desarpg
 
-import android.provider.ContactsContract.CommonDataKinds.Note
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.objectbox.Box
 import io.objectbox.android.ObjectBoxLiveData
 import ru.descend.desarpg.model.MobBattleStats
 import ru.descend.desarpg.model.MobBattleStats_
 import ru.descend.desarpg.repository.BoxMobRepository
-
 
 class MainActivityVM(private val repoMob: BoxMobRepository) : ViewModel() {
 
@@ -22,6 +17,7 @@ class MainActivityVM(private val repoMob: BoxMobRepository) : ViewModel() {
     }
 
     fun getBattleStats() = repoMob.currentStats
+    fun getSkillTreeNodes() = repoMob.currentSkillTreeStats
     fun getMob() = repoMob.currentMob
     fun getAllBoxes() = repoMob.getAllBoxes()
 
