@@ -16,10 +16,12 @@ class MainActivityVM(private val repoMob: BoxMobRepository) : ViewModel() {
         return mobBattleStatsLiveData as ObjectBoxLiveData<MobBattleStats?>
     }
 
-    fun getBattleStats() = repoMob.currentStats
-    fun getSkillTreeNodes() = repoMob.currentSkillTreeStats
-    fun getMob() = repoMob.currentMob
+    fun getCurrentStats() = repoMob.getCurrentStats()
+    fun getStockStats() = repoMob.getStockStats()
+    fun getSkillTreeNodes() = repoMob.getCurrentSkillTreeStats()
+    fun getMob() = repoMob.getCurrentMob()
     fun getAllBoxes() = repoMob.getAllBoxes()
+    fun getBox() = repoMob.getBox()
 
     fun saveToDB() {
         repoMob.saveToDB()

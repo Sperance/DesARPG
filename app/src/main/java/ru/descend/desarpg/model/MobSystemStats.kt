@@ -58,6 +58,6 @@ data class MobSystemStats(@Id var id: Long = 0) {
     }
 
     override fun toString(): String {
-        return "MobSystemStats(id=$id, arrayStats=${arrayStats.joinToString()})"
+        return "MobSystemStats(id=$id, arrayStats=\n${arrayStats.joinToString("\n")})"
     }
 }

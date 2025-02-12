@@ -141,9 +141,11 @@ class ViewStatLine @JvmOverloads constructor(
 
     fun setProperty(prop: StockStatsProp?) {
         if (prop == null) return
-        val textSymbol = if (prop.getPercent() < 0) "" else "+"
+        val textSymbol = if (prop.getPercent() < 0) "-" else "+"
+        val needPercent = prop.getPercent().to0Text().trim() != "0"
         this.text = prop.getCurrentForGlobalStats().to0Text()
-        this.textPostfix = " (${prop.getValue().to0Text()} $textSymbol${prop.getPercent().to0Text()}%)"
+        if (needPercent) this.textPostfix = " (${prop.getValue().to0Text()} $textSymbol${prop.getPercent().to0Text()}%)"
+        else this.textPostfix = ""
         applyValues()
     }
 

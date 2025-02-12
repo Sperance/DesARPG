@@ -33,5 +33,5 @@ fun log(textLog: Any) {
 }
 
 private fun stackTraceLog(trace: Array<StackTraceElement>): String {
-    return trace[4].fileName + "(" + trace[4].lineNumber + ")::" + trace[3].fileName + "(" + trace[3].lineNumber + ")"
+    return trace[3].fileName + "::" + trace[3].methodName.substringBefore("$") + "(" + trace[3].lineNumber + ")"
 }

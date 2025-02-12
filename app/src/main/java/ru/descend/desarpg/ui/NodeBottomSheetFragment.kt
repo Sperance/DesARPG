@@ -5,15 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ru.descend.desarpg.R
+import ru.descend.desarpg.databinding.BottomSheetNodeBinding
+import ru.descend.desarpg.log
+import ru.descend.desarpg.model.Prop
 import ru.descend.desarpg.model.SkillNodeEntity
-import ru.descend.desarpg.ui.custom.SkillTreeView
+import ru.descend.desarpg.ui.adapters.AdapterSkillNodeList
 
 class NodeBottomSheetFragment : BottomSheetDialogFragment() {
+
+    private var _binding: BottomSheetNodeBinding? = null
+    private val binding get() = _binding!!
     private lateinit var node: SkillNodeEntity
     private var activationListener: OnNodeActivationListener? = null
+    private val adapter = AdapterSkillNodeList()
 
     interface OnNodeActivationListener {
         fun onActivateNodeRequested(node: SkillNodeEntity)
@@ -32,38 +41,41 @@ class NodeBottomSheetFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.bottom_sheet_node, container, false)
+    ): View {
+        _binding = BottomSheetNodeBinding.inflate(layoutInflater, container, false)
+        return _binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<TextView>(R.id.node_name).text = node.name
+        binding.nodeName.setText(node.name)
+        binding.recyclerNodeStats.adapter = adapter
+        binding.recyclerNodeStats.layoutManager = LinearLayoutManager(requireContext())
 
-        val activateButton = view.findViewById<Button>(R.id.activate_button)
-        val deactivateButton = view.findViewById<Button>(R.id.deactivate_button)
+        adapter.onNewData(ArrayList<Prop>().apply { addAll(node.arrayStats) })
 
         if (node.isActivated) {
-            activateButton.visibility = View.GONE
-            deactivateButton.visibility = View.VISIBLE
+            binding.activateButton.visibility = View.GONE
+            binding.deactivateButton.visibility = View.VISIBLE
         } else {
-            activateButton.visibility = View.VISIBLE
-            deactivateButton.visibility = View.GONE
+            binding.activateButton.visibility = View.VISIBLE
+            binding.deactivateButton.visibility = View.GONE
         }
 
-        activateButton.setOnClickListener {
+        binding.activateButton.setOnClickListener {
             activationListener?.onActivateNodeRequested(node)
             dismiss()
         }
 
-        deactivateButton.setOnClickListener {
+        binding.deactivateButton.setOnClickListener {
             activationListener?.onDeactivateNodeRequested(node)
             dismiss()
         }
     }
 
-    companion object {
-        const val TAG = "NodeBottomSheet"
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

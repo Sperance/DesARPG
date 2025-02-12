@@ -18,6 +18,6 @@ class RoomMobs(
     lateinit var systemStats: ToOne<MobSystemStats>
     lateinit var skillTreeStats: ToOne<MobSkillTreeStats>
     override fun toString(): String {
-        return "RoomMobs(id=$id, name='$name', battleStats=${battleStats.target}, systemStats=${systemStats.target}, skillTreeStats=${skillTreeStats.target})"
+        return "RoomMobs(id=$id, name='$name')"
     }
 }

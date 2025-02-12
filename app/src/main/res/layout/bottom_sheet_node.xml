@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp">
 
-    <TextView
+    <ru.descend.desarpg.ui.custom.ViewStatLine
         android:id="@+id/node_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textStyle="bold"/>
+        app:cardStrokeColor="@android:color/holo_blue_bright"
+        app:cardStrokeWidth="2dp"
+        app:mainTextStyle="bold"
+        app:text="Sample text"
+        app:textGravity="center"
+        app:textSize="8sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_node_stats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp" />
 
     <Button
         android:id="@+id/activate_button"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Активировать"/>
+        android:text="Активировать" />
 
     <Button
         android:id="@+id/deactivate_button"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Деактивировать"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

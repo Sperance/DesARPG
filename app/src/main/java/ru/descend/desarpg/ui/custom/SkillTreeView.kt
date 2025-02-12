@@ -1,38 +1,29 @@
 package ru.descend.desarpg.ui.custom
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.PointF
-import android.graphics.drawable.Drawable
+import android.graphics.SweepGradient
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import io.objectbox.Box
-import io.objectbox.BoxStore
-import ru.descend.desarpg.AppController
-import ru.descend.desarpg.R
-import ru.descend.desarpg.log
+import ru.descend.desarpg.MainActivityVM
 import ru.descend.desarpg.model.SkillNodeEntity
 import ru.descend.desarpg.ui.NodeBottomSheetFragment
 import kotlin.math.sqrt
 
+@SuppressLint("ViewConstructor")
 class SkillTreeView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, private val viewModel: MainActivityVM
 ) : View(context, attrs, defStyleAttr) {
 
-    private val nodes = mutableListOf<SkillNodeEntity>()
+    private val nodes = viewModel.getSkillTreeNodes().arrayStats
     private val connections = mutableListOf<Pair<SkillNodeEntity, SkillNodeEntity>>()
     private val nodePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLUE
@@ -50,19 +41,47 @@ class SkillTreeView @JvmOverloads constructor(
         color = Color.WHITE
         textSize = 40f
     }
+    private val gradientPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 10f // Толщина рамки
+    }
+    private var gradientColors = intArrayOf(Color.RED, Color.GREEN, Color.YELLOW)
 
     private var offsetX = 0f
     private var offsetY = 0f
     private var scaleFactor = 1f
     private val gestureDetector = GestureDetector(context, GestureListener())
 
-    fun loadNodes(list: Collection<SkillNodeEntity>) {
-        nodes.addAll(list)
-        list.filter { it.connection != null }.forEach {
-            connections.add(it to list.find { ob -> ob.code == it.connection }!!)
+    // Добавляем переменные для хранения размеров экрана
+    private var screenWidth = 0f
+    private var screenHeight = 0f
+
+    init {
+        nodes.filter { it.connectionCode != null }.forEach { node ->
+            val connectedNode = nodes.find { ob -> ob.code == node.connectionCode }
+            if (connectedNode != null) {
+                connections.add(node to connectedNode)
+            } else {
+                // Логирование ошибки или предупреждения
+                println("Ошибка: Узел с code=${node.connectionCode} не найден для узла ${node.name}")
+            }
         }
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        screenWidth = w.toFloat()
+        screenHeight = h.toFloat()
+
+        // Центрируем корневой узел
+        val rootNode = nodes.find { it.connectionCode == null } // Находим корневой узел
+        if (rootNode != null) {
+            offsetX = screenWidth / 2 - rootNode.positionX * scaleFactor
+            offsetY = screenHeight / 2 - rootNode.positionY * scaleFactor
+        }
+    }
+
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.save()
@@ -94,6 +113,19 @@ class SkillTreeView @JvmOverloads constructor(
             // Рисуем круг (фон узла)
             canvas.drawCircle(node.positionX, node.positionY, 50f, paint)
 
+            // Если узел активирован, рисуем градиентную рамку
+            if (node.isActivated) {
+                // Создаем градиент
+                val gradient = SweepGradient(
+                    node.positionX, node.positionY,
+                    gradientColors, null
+                )
+                gradientPaint.shader = gradient
+
+                // Рисуем градиентную рамку
+                canvas.drawCircle(node.positionX, node.positionY, 55f, gradientPaint) // 55f = радиус круга + толщина рамки
+            }
+
             // Если есть иконка, рисуем её
             node.iconInt?.let { iconInt ->
                 val iconSize = 80 // Размер иконки
@@ -117,6 +149,11 @@ class SkillTreeView @JvmOverloads constructor(
         }
 
         canvas.restore()
+    }
+
+    fun updateGradientColors(colors: IntArray) {
+        gradientColors = colors
+        invalidate() // Перерисовываем View
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -171,7 +208,7 @@ class SkillTreeView @JvmOverloads constructor(
                 override fun onActivateNodeRequested(node: SkillNodeEntity) {
                     if (canActivateNode(node)) {
                         node.isActivated = true
-                        saveNodesToDatabase()
+                        node.saveToBox()
                         invalidate()
                     } else {
                         showActivationError()
@@ -179,25 +216,26 @@ class SkillTreeView @JvmOverloads constructor(
                 }
 
                 override fun onDeactivateNodeRequested(node: SkillNodeEntity) {
-                    if (canDeactivateNode(node)) {
+                    val canDeactivateNode = canDeactivateNode(node)
+                    if (canDeactivateNode.isEmpty()) {
                         node.isActivated = false
-                        saveNodesToDatabase()
+                        node.saveToBox()
                         invalidate()
                     } else {
-                        showDeactivationError()
+                        showDeactivationError(canDeactivateNode)
                     }
                 }
             })
         }
 
         (context as? FragmentActivity)?.supportFragmentManager?.let {
-            fragment.show(it, NodeBottomSheetFragment.TAG)
+            fragment.show(it, "")
         }
     }
 
-    private fun canDeactivateNode(node: SkillNodeEntity): Boolean {
-        if (!node.isActivated) return false // Узел не активирован
-        if (node.code == 1) return false //Нельзя деактивировать корневой узел
+    private fun canDeactivateNode(node: SkillNodeEntity): String {
+        if (!node.isActivated) return "Узел не активирован" // Узел не активирован
+        if (node.code == 1) return "Нельзя деактивировать корневой узел" //Нельзя деактивировать корневой узел
 
         // Проверяем, что узел связан только с одним активированным узлом
         val connectedActivatedNodes = connections
@@ -206,7 +244,7 @@ class SkillTreeView @JvmOverloads constructor(
             .filter { it.isActivated }
 
         // Для остальных узлов: можно деактивировать, если связан только с одним активированным узлом
-        return connectedActivatedNodes.size == 1
+        return if (connectedActivatedNodes.size == 1) "" else "Узел связан с 2 и более соседними узлами"
     }
 
     private fun showActivationError() {
@@ -217,33 +255,12 @@ class SkillTreeView @JvmOverloads constructor(
             .show()
     }
 
-    private fun showDeactivationError() {
+    private fun showDeactivationError(text: String) {
         AlertDialog.Builder(context)
             .setTitle("Ошибка")
-            .setMessage("Узел не может быть деактивирован. Он связан с несколькими активированными узлами.")
+            .setMessage("Узел не может быть деактивирован.\n$text")
             .setPositiveButton("OK", null)
             .show()
-    }
-
-    private fun loadNodesFromDatabase() {
-//        val skillNodeEntities = skillNodeBox.all
-//        for (entity in skillNodeEntities) {
-//            val node = SkillNode(PointF(entity.positionX, entity.positionY), entity.name, entity.isActivated)
-//            nodes.add(node)
-//        }
-    }
-
-    private fun saveNodesToDatabase() {
-//        skillNodeBox.removeAll() // Очищаем базу данных перед сохранением
-//        for (node in nodes) {
-//            val entity = SkillNodeEntity(
-//                name = node.name,
-//                positionX = node.position.x,
-//                positionY = node.position.y,
-//                isActivated = node.isActivated
-//            )
-//            skillNodeBox.put(entity)
-//        }
     }
 
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
