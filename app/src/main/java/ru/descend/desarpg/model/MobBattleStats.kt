@@ -1,10 +1,12 @@
 package ru.descend.desarpg.model
 
+import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.annotation.Transient
 import io.objectbox.relation.ToMany
+import io.objectbox.relation.ToOne
 import ru.descend.desarpg.addPercent
 import ru.descend.desarpg.applicationBox
 import ru.descend.desarpg.model.converters.EnumPropsTypeConverter
@@ -40,6 +42,8 @@ open class Prop(
 data class StockStatsProp(
     var description: String = "",
 ): Prop() {
+    lateinit var statsObj: ToOne<MobBattleStats>
+
     @Transient
     private var currentValue = 0.0
 
@@ -88,15 +92,16 @@ data class StockStatsProp(
     }
 
     override fun toString(): String {
-        return "StockStatsProp(id=$id, type='$type', value=$valueP, percent=$percentP, currentValue=$currentValue)"
+        return "StockStatsProp(id=$id, type='$type', value=$valueP, percent=$percentP, statsObj=${statsObj.target.id})"
     }
 }
 
 @Entity
 data class MobBattleStats(
-    @Id override var id: Long = 0,
+    @Id var id: Long = 0,
     var uuid: String = UUID.randomUUID().toString()
-) : IntEntityObjectClass {
+) {
+    @Backlink(to = "statsObj")
     lateinit var arrayStats: ToMany<StockStatsProp>
 
     /**
@@ -132,11 +137,6 @@ data class MobBattleStats(
                 resultStat
             }
         }
-    }
-
-    override fun saveToBox() {
-        arrayStats.applyChangesToDb()
-        applicationBox.boxFor(MobBattleStats::class.java).put(this)
     }
 
     override fun toString(): String {

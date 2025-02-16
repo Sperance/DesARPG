@@ -116,8 +116,15 @@ class ViewStatLine @JvmOverloads constructor(
         setLeftIcon(ContextCompat.getDrawable(context, resId))
     }
 
-    fun setText(text: CharSequence) {
-        this.text = text
+    fun setText(text: CharSequence?) {
+        if (text == null) this.text = ""
+        else this.text = text
+        applyValues()
+    }
+
+    fun setText(text: Any?) {
+        if (text == null) this.text = ""
+        else this.text = text.toString()
         applyValues()
     }
 

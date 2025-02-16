@@ -1,7 +1,5 @@
 package ru.descend.desarpg.logic
 
-import ru.descend.desarpg.model.RoomMobs
-
 class ItemListener(val name: String) {
     private val listenersArray: ArrayList<() -> Unit> = ArrayList()
     fun clearListeners() {
@@ -17,20 +15,20 @@ class ItemListener(val name: String) {
     }
 }
 
-interface IntBaseValues {
-    val listenerBeforeBattle: ItemListener
-        get() = ItemListener("Начало боя")
-    fun onBeforeBattle(myUnit: RoomMobs, enemy: RoomMobs) { listenerBeforeBattle.invoke() }
-
-    val listenerDoDamage: ItemListener
-        get() = ItemListener("Нанесение урона")
-    fun onDoDamage(myUnit: RoomMobs, enemy: RoomMobs) { listenerDoDamage.invoke() }
-
-    val listenerTakeDamage: ItemListener
-        get() = ItemListener("Получение урона")
-    fun onTakeDamage(myUnit: RoomMobs, enemy: RoomMobs) { listenerTakeDamage.invoke() }
-
-    val listenerAfterBattle: ItemListener
-        get() = ItemListener("Конец боя")
-    fun onAfterBattle(myUnit: RoomMobs, enemy: RoomMobs) { listenerAfterBattle.invoke() }
-}
+//interface IntBaseValues {
+//    val listenerBeforeBattle: ItemListener
+//        get() = ItemListener("Начало боя")
+//    fun onBeforeBattle(myUnit: RoomMobs, enemy: RoomMobs) { listenerBeforeBattle.invoke() }
+//
+//    val listenerDoDamage: ItemListener
+//        get() = ItemListener("Нанесение урона")
+//    fun onDoDamage(myUnit: RoomMobs, enemy: RoomMobs) { listenerDoDamage.invoke() }
+//
+//    val listenerTakeDamage: ItemListener
+//        get() = ItemListener("Получение урона")
+//    fun onTakeDamage(myUnit: RoomMobs, enemy: RoomMobs) { listenerTakeDamage.invoke() }
+//
+//    val listenerAfterBattle: ItemListener
+//        get() = ItemListener("Конец боя")
+//    fun onAfterBattle(myUnit: RoomMobs, enemy: RoomMobs) { listenerAfterBattle.invoke() }
+//}

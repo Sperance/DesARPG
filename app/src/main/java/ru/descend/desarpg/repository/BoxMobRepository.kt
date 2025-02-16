@@ -2,26 +2,21 @@ package ru.descend.desarpg.repository
 
 import io.objectbox.Box
 import io.objectbox.BoxStore
-import io.objectbox.kotlin.flow
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import io.objectbox.annotation.Backlink
+import io.objectbox.annotation.Entity
+import io.objectbox.annotation.Id
+import io.objectbox.relation.ToMany
+import io.objectbox.relation.ToOne
 import ru.descend.desarpg.log
 import ru.descend.desarpg.model.MobBattleStats
 import ru.descend.desarpg.model.MobSkillTreeStats
 import ru.descend.desarpg.model.MobSystemStats
-import ru.descend.desarpg.model.MyObjectBox
-import ru.descend.desarpg.model.RoomMobs
 import ru.descend.desarpg.model.SkillNodeEntity
 import ru.descend.desarpg.model.StockStatsProp
 import ru.descend.desarpg.model.SystemStatsProp
-import ru.descend.desarpg.ui.custom.SkillTreeView
+import java.util.UUID
 
 class BoxMobRepository(private val currentBox: BoxStore) {
-    private val roomMobsBox: Box<RoomMobs> = currentBox.boxFor(RoomMobs::class.java)
-    private lateinit var currentMob: RoomMobs
-    fun getCurrentMob(): RoomMobs {
-        return currentMob
-    }
-
     val battleStatsBox: Box<MobBattleStats> = currentBox.boxFor(MobBattleStats::class.java)
     private val statsPropBox: Box<StockStatsProp> = currentBox.boxFor(StockStatsProp::class.java)
     private lateinit var currentStats: MobBattleStats
@@ -52,15 +47,15 @@ class BoxMobRepository(private val currentBox: BoxStore) {
     }
 
     init {
-        if (roomMobsBox.get(1) != null) {
+        if (battleStatsBox.get(1) != null) {
             log("already")
-            currentMob = roomMobsBox.get(1)
             currentStats = battleStatsBox.get(1)
+            log("cur: $currentStats")
             currentSystemStats = systemStatsBox.get(1)
             currentSkillTreeStats = mobSkillTreeStatsBox.get(1)
         } else {
+            createAndSaveMobBattleStats()
             log("created")
-            val roomMob = RoomMobs().apply { name = "TestUser" }
             val battleStats = MobBattleStats()
             val systemStats = MobSystemStats()
             val mobSkillTreeStats = MobSkillTreeStats()
@@ -69,26 +64,35 @@ class BoxMobRepository(private val currentBox: BoxStore) {
                 systemStats.initializeAllStats()
                 mobSkillTreeStats.initializeAllStats()
 
-                roomMob.battleStats.target = battleStats
-                roomMob.systemStats.target = systemStats
-                roomMob.skillTreeStats.target = mobSkillTreeStats
-
                 statsPropBox.put(battleStats.arrayStats)
                 systemPropBox.put(systemStats.arrayStats)
                 skillNodeEntityBox.put(mobSkillTreeStats.arrayStats)
 
-                battleStatsBox.put(battleStats)
                 systemStatsBox.put(systemStats)
                 mobSkillTreeStatsBox.put(mobSkillTreeStats)
 
-                roomMobsBox.put(roomMob)
-
-                currentMob = roomMob
-                currentStats = battleStats
+                currentStats = battleStatsBox.get(battleStatsBox.put(battleStats))
+                log("cur: $currentStats")
+                log("old: $battleStats")
                 currentSystemStats = systemStats
                 currentSkillTreeStats = mobSkillTreeStats
             }
         }
+    }
+
+    fun createAndSaveMobBattleStats() {
+
+        val boxOuterClass = currentBox.boxFor(OuterClasses::class.java)
+
+        val newObject = OuterClasses()
+        newObject.arrayStats.add(InnerClasses(type = 1))
+        newObject.arrayStats.add(InnerClasses(type = 2))
+        newObject.arrayStats.add(InnerClasses(type = 3))
+        newObject.arrayStats.add(InnerClasses(type = 4))
+        val id = boxOuterClass.put(newObject)
+        log("1: $newObject")
+        val catchedObject = boxOuterClass.get(id)
+        log("2: $catchedObject")
     }
 
     fun saveToDB() {

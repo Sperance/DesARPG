@@ -2,11 +2,12 @@ package ru.descend.desarpg.ui
 
 import ru.descend.desarpg.databinding.FragmentMobMainBinding
 import ru.descend.desarpg.model.EnumPropsType
+import ru.descend.desarpg.model.EnumSystemStatsType
 
 class FragmentMobMain : BaseFragment<FragmentMobMainBinding>(FragmentMobMainBinding::inflate) {
 
     private fun initBaseStats() {
-        binding.textMobName.setText(viewModel.getMob().name)
+        //binding.textMobName.setText(viewModel.getCurrentSystemStats().getStockStat(EnumSystemStatsType.NAME).value)
         binding.textMobHealth.setProperty(viewModel.getCurrentStats().getStat(EnumPropsType.HEALTH))
         binding.textMobAttack.setProperty(viewModel.getCurrentStats().getStat(EnumPropsType.PHYSIC_ATTACK))
         binding.textMobStrength.setProperty(viewModel.getCurrentStats().getStat(EnumPropsType.STRENGTH))
