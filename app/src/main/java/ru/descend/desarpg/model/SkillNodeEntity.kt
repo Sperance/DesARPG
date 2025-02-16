@@ -1,14 +1,10 @@
 package ru.descend.desarpg.model
 
-import io.objectbox.BoxStore
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToMany
 import ru.descend.desarpg.R
 import ru.descend.desarpg.applicationBox
-import ru.descend.desarpg.log
-import kotlin.math.cos
-import kotlin.math.sin
 
 @Entity
 data class SkillNodeEntity(
@@ -21,7 +17,7 @@ data class SkillNodeEntity(
     var connectionCode: Int? = null,
     var isActivated: Boolean = false
 ) : IntEntityObjectClass {
-    lateinit var arrayStats: ToMany<Prop>
+    lateinit var arrayStats: ToMany<StockStatsProp>
 
     override fun saveToBox() {
         applicationBox.boxFor(SkillNodeEntity::class.java).put(this)
@@ -45,7 +41,7 @@ fun createLargeSkillTree() : ArrayList<SkillNodeEntity> {
         connectionCode = null,
         isActivated = true
     )
-    centerNode.arrayStats.add(Prop(type = EnumPropsType.HEALTH, valueP = 50.0))
+    centerNode.arrayStats.add(StockStatsProp(type = EnumPropsType.HEALTH, valueP = 50.0))
     nodes.add(centerNode)
 
     // Узлы первого уровня (6 узлов вокруг центрального)
@@ -55,7 +51,7 @@ fun createLargeSkillTree() : ArrayList<SkillNodeEntity> {
         SkillNodeEntity(code = 4, name = "Node 4", positionX = 0f, positionY = -500f, iconInt = null, connectionCode = 1, isActivated = false),
         SkillNodeEntity(code = 5, name = "Node 5", positionX = 0f, positionY = 500f, iconInt = null, connectionCode = 1, isActivated = false),
         SkillNodeEntity(code = 6, name = "Node 6", positionX = -353.55f, positionY = -353.55f, iconInt = null, connectionCode = 1, isActivated = false).apply {
-            arrayStats.add(Prop(type = EnumPropsType.STRENGTH, valueP = 3.0))
+            arrayStats.add(StockStatsProp(type = EnumPropsType.STRENGTH, valueP = 3.0))
         },
         SkillNodeEntity(code = 7, name = "Node 7", positionX = 353.55f, positionY = -353.55f, iconInt = null, connectionCode = 1, isActivated = false)
     )
@@ -146,8 +142,8 @@ data class MobSkillTreeStats(@Id var id: Long = 0) {
         arrayStats.addAll(createLargeSkillTree())
     }
 
-    fun getAllNodeStats() : ArrayList<Prop> {
-        val result = ArrayList<Prop>()
+    fun getAllNodeStats() : ArrayList<StockStatsProp> {
+        val result = ArrayList<StockStatsProp>()
         arrayStats.filter { it.arrayStats.isResolved && it.isActivated && !it.arrayStats.isEmpty() }.forEach {
             result.addAll(it.arrayStats)
         }

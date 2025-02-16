@@ -22,27 +22,15 @@ enum class EnumPropsType(val statName: String, val baseValue: Double) {
 }
 
 @Entity
-open class Prop(
-    @Id override var id: Long = 0,
+data class StockStatsProp(
+    @Id var id: Long = 0,
     @Convert(converter = EnumPropsTypeConverter::class, dbType = String::class)
     var type: EnumPropsType = EnumPropsType.UNDEFINED,
     var valueP: Double = 0.0,
-    var percentP: Double = 0.0
-) : IntEntityObjectClass {
-    override fun saveToBox() {
-        applicationBox.boxFor(Prop::class.java).put(this)
-    }
-
-    override fun toString(): String {
-        return "Prop(id=$id, type=$type, valueP=$valueP, percentP=$percentP)"
-    }
-}
-
-@Entity
-data class StockStatsProp(
+    var percentP: Double = 0.0,
     var description: String = "",
-): Prop() {
-    lateinit var statsObj: ToOne<MobBattleStats>
+) {
+    var statsObj: ToOne<MobBattleStats>? = null
 
     @Transient
     private var currentValue = 0.0
@@ -87,12 +75,12 @@ data class StockStatsProp(
         }
     }
 
-    override fun saveToBox() {
+    fun saveToBox() {
         applicationBox.boxFor(StockStatsProp::class.java).put(this)
     }
 
     override fun toString(): String {
-        return "StockStatsProp(id=$id, type='$type', value=$valueP, percent=$percentP, statsObj=${statsObj.target.id})"
+        return "StockStatsProp(id=$id, type='$type', value=$valueP, percent=$percentP, statsObj=${statsObj?.target?.id})"
     }
 }
 
