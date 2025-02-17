@@ -2,6 +2,7 @@ package ru.descend.desarpg.repository
 
 import io.objectbox.Box
 import io.objectbox.BoxStore
+import ru.descend.desarpg.applicationBox
 import ru.descend.desarpg.log
 import ru.descend.desarpg.model.EnumPropsType
 import ru.descend.desarpg.model.MobBattleStats
@@ -13,69 +14,58 @@ import ru.descend.desarpg.model.StockStatsProp
 import ru.descend.desarpg.model.SystemStatsProp
 
 class BoxMobRepository(private val currentBox: BoxStore) {
-    val battleStatsBox: Box<MobBattleStats> = currentBox.boxFor(MobBattleStats::class.java)
-    private val statsPropBox: Box<StockStatsProp> = currentBox.boxFor(StockStatsProp::class.java)
-    private lateinit var currentStats: MobBattleStats
+
+    private val mobMainBox = currentBox.boxFor(MobMain::class.java)
+    private var currentMob: MobMain? = null
+    fun getCurrentMob(): MobMain {
+        if (mobMainBox.isEmpty || currentMob == null) {
+            log("[CREATED]")
+
+            val newMob = MobMain(name = "Player")
+
+            val newMobBattleStats = MobBattleStats()
+            newMobBattleStats.initializeAllStats()
+            newMob.mobBattleStats.target = newMobBattleStats
+
+            val newMobSystemStats = MobSystemStats()
+            newMobSystemStats.initializeAllStats()
+            newMob.mobSystemStats.target = newMobSystemStats
+
+            val newMobSkillTreeStats = MobSkillTreeStats()
+            newMobSkillTreeStats.initializeAllStats()
+            newMob.mobSkillTreeStats.target = newMobSkillTreeStats
+
+            currentMob = mobMainBox.get(mobMainBox.put(newMob))
+            return currentMob!!
+        } else {
+            log("[ALREADY]")
+
+            currentMob = mobMainBox.get(1)
+            return currentMob!!
+        }
+    }
+
+    private val currentStats = getCurrentMob().mobBattleStats.target
     fun getStockStats() = currentStats
     fun getCurrentStats(): MobBattleStats {
         val newMobStats = MobBattleStats()
         newMobStats.arrayStats.addAll(currentStats.arrayStats.map { it.copy() })
         getCurrentSkillTreeStats().getAllNodeStats().forEach { skillStat ->
             val stat = newMobStats.getStockStat(skillStat.type)
-            stat.addValue(skillStat.valueP)
-            stat.addPercent(skillStat.percentP)
+            stat.addValue(skillStat.valueProp)
+            stat.addPercent(skillStat.percentProp)
         }
         return newMobStats
     }
 
-    private val systemStatsBox: Box<MobSystemStats> = currentBox.boxFor(MobSystemStats::class.java)
-    private val systemPropBox: Box<SystemStatsProp> = currentBox.boxFor(SystemStatsProp::class.java)
-    private lateinit var currentSystemStats: MobSystemStats
+    private val currentSystemStats = getCurrentMob().mobSystemStats.target
     fun getCurrentSystemStats(): MobSystemStats {
         return currentSystemStats
     }
 
-    private val mobSkillTreeStatsBox: Box<MobSkillTreeStats> = currentBox.boxFor(MobSkillTreeStats::class.java)
-    private val skillNodeEntityBox: Box<SkillNodeEntity> = currentBox.boxFor(SkillNodeEntity::class.java)
-    private lateinit var currentSkillTreeStats: MobSkillTreeStats
+    private val currentSkillTreeStats = getCurrentMob().mobSkillTreeStats.target
     fun getCurrentSkillTreeStats(): MobSkillTreeStats {
         return currentSkillTreeStats
-    }
-
-    init {
-//        createAndSaveMobBattleStats()
-//        createAndSaveMobBattleStats_stock()
-//        if (battleStatsBox.get(1) != null) {
-//            log("already")
-//            currentStats = battleStatsBox.get(1)
-//            log("cur: $currentStats")
-//            currentSystemStats = systemStatsBox.get(1)
-//            currentSkillTreeStats = mobSkillTreeStatsBox.get(1)
-//        } else {
-//            createAndSaveMobBattleStats()
-//            log("created")
-//            val battleStats = MobBattleStats()
-//            val systemStats = MobSystemStats()
-//            val mobSkillTreeStats = MobSkillTreeStats()
-//            currentBox.runInTx {
-//                battleStats.initializeAllStats()
-//                systemStats.initializeAllStats()
-//                mobSkillTreeStats.initializeAllStats()
-//
-//                statsPropBox.put(battleStats.arrayStats)
-//                systemPropBox.put(systemStats.arrayStats)
-//                skillNodeEntityBox.put(mobSkillTreeStats.arrayStats)
-//
-//                systemStatsBox.put(systemStats)
-//                mobSkillTreeStatsBox.put(mobSkillTreeStats)
-//
-//                currentStats = battleStatsBox.get(battleStatsBox.put(battleStats))
-//                log("cur: $currentStats")
-//                log("old: $battleStats")
-//                currentSystemStats = systemStats
-//                currentSkillTreeStats = mobSkillTreeStats
-//            }
-//        }
     }
 
     fun createAndSaveMobBattleStats_stock() {
@@ -83,64 +73,62 @@ class BoxMobRepository(private val currentBox: BoxStore) {
         val mobBattleStatsBox = currentBox.boxFor(MobBattleStats::class.java)
 
         val newObject = MobBattleStats()
-        newObject.arrayStats.add(StockStatsProp().apply { type = EnumPropsType.HEALTH })
-        newObject.arrayStats.add(StockStatsProp().apply { type = EnumPropsType.STRENGTH })
-        newObject.arrayStats.add(StockStatsProp().apply { type = EnumPropsType.PHYSIC_ATTACK })
+        newObject.initializeAllStats()
         val obj1 = mobBattleStatsBox.get(mobBattleStatsBox.put(newObject))
         log("obj1: $obj1")
 
-        newObject.arrayStats.add(StockStatsProp().apply { type = EnumPropsType.HEALTH_FOR_STRENGTH })
+        obj1.getStockStat(EnumPropsType.HEALTH).addValue(20).saveToBox()
+//        obj1.arrayStats.applyChangesToDb()
 
-        val obj2 = mobBattleStatsBox.get(mobBattleStatsBox.put(newObject))
+        log("obj1 mod: $obj1")
+
+        val obj2 = mobBattleStatsBox.get(mobBattleStatsBox.put(obj1))
         log("obj2: $obj2")
     }
 
-    fun createAndSaveMobBattleStats() {
+    fun createAndSaveMobBattleStats_stock2() {
 
-        val boxMobMain = currentBox.boxFor(MobMain::class.java)
-//        val boxOuterClass = currentBox.boxFor(OuterClasses::class.java)
+        val mobMainBox = currentBox.boxFor(MobMain::class.java)
 
         val newMob = MobMain()
-        val newObject = OuterClasses()
-        newObject.arrayStats.add(InnerClasses(type = 1))
-        newObject.arrayStats.add(InnerClasses(type = 2))
-        newObject.arrayStats.add(InnerClasses(type = 3))
-        newObject.arrayStats.add(InnerClasses(type = 4))
+        val newObject = MobBattleStats()
+        newObject.initializeAllStats()
 
-        newMob.outerObject.target = newObject
+        newMob.mobBattleStats.target = newObject
 
-        val obj1mob = boxMobMain.get(boxMobMain.put(newMob))
-        log("obj1mob: $obj1mob")
+        val obj1 = mobMainBox.get(mobMainBox.put(newMob))
+        log("obj1: $obj1")
 
-        obj1mob.outerObject.target.arrayStats.add(InnerClasses(type = 5))
-        obj1mob.outerObject.target.arrayStats.applyChangesToDb()
+        obj1.mobBattleStats.target.getStockStat(EnumPropsType.HEALTH).addValue(25).saveToBox()
 
-        val obj2mob = boxMobMain.get(boxMobMain.put(obj1mob))
-        log("obj2mob: $obj2mob")
+//        obj1.getStockStat(EnumPropsType.HEALTH).addValue(20).saveToBox()
+//        obj1.arrayStats.applyChangesToDb()
+
+        log("obj1 mod: $obj1")
+
+        val obj2 = mobMainBox.get(mobMainBox.put(obj1))
+        log("obj2: $obj2")
     }
 
-    fun saveToDB() {
-        currentBox.runInTx {
-            statsPropBox.putBatched(currentStats.arrayStats, currentStats.arrayStats.size)
-            battleStatsBox.put(currentStats)
-
-            systemPropBox.putBatched(currentSystemStats.arrayStats, currentSystemStats.arrayStats.size)
-            systemStatsBox.put(currentSystemStats)
-
-            skillNodeEntityBox.putBatched(currentSkillTreeStats.arrayStats, currentSkillTreeStats.arrayStats.size)
-            mobSkillTreeStatsBox.put(currentSkillTreeStats)
-        }
-    }
+//    fun saveToDB() {
+//        currentBox.runInTx {
+//            statsPropBox.putBatched(currentStats.arrayStats, currentStats.arrayStats.size)
+//            battleStatsBox.put(currentStats)
+//
+//            systemPropBox.putBatched(currentSystemStats.arrayStats, currentSystemStats.arrayStats.size)
+//            systemStatsBox.put(currentSystemStats)
+//
+//            skillNodeEntityBox.putBatched(currentSkillTreeStats.arrayStats, currentSkillTreeStats.arrayStats.size)
+//            mobSkillTreeStatsBox.put(currentSkillTreeStats)
+//        }
+//    }
 
     fun getBox() = currentBox
 
     fun getAllBoxes() : ArrayList<Box<*>> {
         val list = ArrayList<Box<*>>()
-        BoxMobRepository::class.java.declaredFields.forEach {
-            it.isAccessible = true
-            val obj = it.get(this)
-            if (obj is Box<*>) list.add(obj)
-            it.isAccessible = false
+        applicationBox.allEntityClasses.forEach {
+            list.add(applicationBox.boxFor(it))
         }
         return list
     }

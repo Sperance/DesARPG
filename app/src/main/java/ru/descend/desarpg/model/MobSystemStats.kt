@@ -1,10 +1,14 @@
 package ru.descend.desarpg.model
 
+import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToMany
+import io.objectbox.relation.ToOne
+import ru.descend.desarpg.applicationBox
 import ru.descend.desarpg.model.converters.EnumSystemStatsTypeConverter
+import ru.descend.desarpg.repository.InnerClasses
 import ru.descend.desarpg.to1Digits
 
 enum class EnumSystemStatsCategory {
@@ -24,37 +28,53 @@ enum class EnumSystemStatsType(val statName: String, val category: EnumSystemSta
 }
 
 @Entity
-data class SystemStatsProp(
-    @Id var id: Long = 0,
-    @Convert(converter = EnumSystemStatsTypeConverter::class, dbType = String::class)
-    var type: EnumSystemStatsType = EnumSystemStatsType.UNDEFINED,
-    var description: String = "",
-    var value: Double = 0.0
-) {
+open class SystemStatsProp: DoubleProp(), IntEntityObjectClass {
+    var mobSystemStats: ToOne<MobSystemStats>? = null
+
     fun add(count: Number) {
-        value = (value + count.toDouble()).to1Digits()
+        valueProp = (valueProp + count.toDouble()).to1Digits()
     }
     fun rem(count: Number) {
-        value = (value - count.toDouble()).to1Digits()
+        valueProp = (valueProp - count.toDouble()).to1Digits()
     }
     fun set(count: Number) {
-        value = count.toDouble().to1Digits()
+        valueProp = count.toDouble().to1Digits()
+    }
+
+    override fun saveToBox() {
+        applicationBox.boxFor(SystemStatsProp::class.java).put(this)
+    }
+
+    override fun toString(): String {
+        return "SystemStatsProp(id=$id, type=$type, description='$description', valueProp=$valueProp, mobSystemStats=${mobSystemStats?.target?.id})"
     }
 }
 
 @Entity
-data class MobSystemStats(@Id var id: Long = 0) {
+data class MobSystemStats(@Id override var id: Long = 0): IntEntityObjectClass {
+    @Backlink(to = "mobSystemStats")
     lateinit var arrayStats: ToMany<SystemStatsProp>
 
     fun initializeAllStats() {
         arrayStats.clear()
         EnumSystemStatsType.entries.filter { it != EnumSystemStatsType.UNDEFINED }.forEach {
-            arrayStats.add(SystemStatsProp(type = it, value = it.baseValue))
+            arrayStats.add(SystemStatsProp().apply { type = it.name ; valueProp = it.baseValue })
         }
     }
 
     fun getStockStat(stat: EnumSystemStatsType): SystemStatsProp {
+        return arrayStats.find { it.type == stat.name }!!
+    }
+
+    fun getStockStat(stat: String): SystemStatsProp {
         return arrayStats.find { it.type == stat }!!
+    }
+
+    override fun saveToBox() {
+        arrayStats.forEach {
+            applicationBox.boxFor(SystemStatsProp::class.java).put(it)
+        }
+        applicationBox.boxFor(MobSystemStats::class.java).put(this)
     }
 
     override fun toString(): String {

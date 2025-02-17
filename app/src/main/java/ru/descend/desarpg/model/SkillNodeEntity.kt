@@ -17,7 +17,7 @@ data class SkillNodeEntity(
     var connectionCode: Int? = null,
     var isActivated: Boolean = false
 ) : IntEntityObjectClass {
-    lateinit var arrayStats: ToMany<StockStatsProp>
+    lateinit var arrayStats: ToMany<DoubleProp>
 
     override fun saveToBox() {
         applicationBox.boxFor(SkillNodeEntity::class.java).put(this)
@@ -41,7 +41,7 @@ fun createLargeSkillTree() : ArrayList<SkillNodeEntity> {
         connectionCode = null,
         isActivated = true
     )
-    centerNode.arrayStats.add(StockStatsProp(type = EnumPropsType.HEALTH, valueP = 50.0))
+    centerNode.arrayStats.add(StockStatsProp().apply { type = EnumPropsType.HEALTH.name ; valueProp = 50.0 })
     nodes.add(centerNode)
 
     // Узлы первого уровня (6 узлов вокруг центрального)
@@ -51,7 +51,7 @@ fun createLargeSkillTree() : ArrayList<SkillNodeEntity> {
         SkillNodeEntity(code = 4, name = "Node 4", positionX = 0f, positionY = -500f, iconInt = null, connectionCode = 1, isActivated = false),
         SkillNodeEntity(code = 5, name = "Node 5", positionX = 0f, positionY = 500f, iconInt = null, connectionCode = 1, isActivated = false),
         SkillNodeEntity(code = 6, name = "Node 6", positionX = -353.55f, positionY = -353.55f, iconInt = null, connectionCode = 1, isActivated = false).apply {
-            arrayStats.add(StockStatsProp(type = EnumPropsType.STRENGTH, valueP = 3.0))
+            arrayStats.add(StockStatsProp().apply { type = EnumPropsType.STRENGTH.name ; valueProp = 3.0 })
         },
         SkillNodeEntity(code = 7, name = "Node 7", positionX = 353.55f, positionY = -353.55f, iconInt = null, connectionCode = 1, isActivated = false)
     )
@@ -134,7 +134,7 @@ fun createLargeSkillTree() : ArrayList<SkillNodeEntity> {
 }
 
 @Entity
-data class MobSkillTreeStats(@Id var id: Long = 0) {
+data class MobSkillTreeStats(@Id override var id: Long = 0): IntEntityObjectClass {
     lateinit var arrayStats: ToMany<SkillNodeEntity>
 
     fun initializeAllStats() {
@@ -142,12 +142,19 @@ data class MobSkillTreeStats(@Id var id: Long = 0) {
         arrayStats.addAll(createLargeSkillTree())
     }
 
-    fun getAllNodeStats() : ArrayList<StockStatsProp> {
-        val result = ArrayList<StockStatsProp>()
+    fun getAllNodeStats() : ArrayList<DoubleProp> {
+        val result = ArrayList<DoubleProp>()
         arrayStats.filter { it.arrayStats.isResolved && it.isActivated && !it.arrayStats.isEmpty() }.forEach {
             result.addAll(it.arrayStats)
         }
         return result
+    }
+
+    override fun saveToBox() {
+        arrayStats.forEach {
+            applicationBox.boxFor(SkillNodeEntity::class.java).put(it)
+        }
+        applicationBox.boxFor(MobSkillTreeStats::class.java).put(this)
     }
 
     override fun toString(): String {

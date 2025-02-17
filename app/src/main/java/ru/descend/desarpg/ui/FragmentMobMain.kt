@@ -7,7 +7,7 @@ import ru.descend.desarpg.model.EnumSystemStatsType
 class FragmentMobMain : BaseFragment<FragmentMobMainBinding>(FragmentMobMainBinding::inflate) {
 
     private fun initBaseStats() {
-        //binding.textMobName.setText(viewModel.getCurrentSystemStats().getStockStat(EnumSystemStatsType.NAME).value)
+        binding.textMobName.setText(viewModel.getMob().name)
         binding.textMobHealth.setProperty(viewModel.getCurrentStats().getStat(EnumPropsType.HEALTH))
         binding.textMobAttack.setProperty(viewModel.getCurrentStats().getStat(EnumPropsType.PHYSIC_ATTACK))
         binding.textMobStrength.setProperty(viewModel.getCurrentStats().getStat(EnumPropsType.STRENGTH))
@@ -15,45 +15,31 @@ class FragmentMobMain : BaseFragment<FragmentMobMainBinding>(FragmentMobMainBind
 
     override fun setUpViews() {
         binding.buttonHealthTo50.setOnClickListener {
-            val stat = viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH)
-            stat.setValue(50)
-            viewModel.saveToDB()
+            viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH).setValue(50).saveToBox()
         }
         binding.buttonHealthAddPercent.setOnClickListener {
-            val stat = viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH)
-            stat.addPercent(5)
-            viewModel.saveToDB()
+            viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH).addPercent(5).saveToBox()
         }
         binding.buttonHealthRemovePercent.setOnClickListener {
-            val stat = viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH)
-            stat.removePercent(5)
-            viewModel.saveToDB()
+            viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH).removePercent(5).saveToBox()
         }
         binding.buttonHealthAdd.setOnClickListener {
-            val stat = viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH)
-            stat.addValue(2)
-            viewModel.saveToDB()
+            viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH).addValue(2).saveToBox()
         }
         binding.buttonStrengthAdd.setOnClickListener {
-            val stat = viewModel.getStockStats().getStockStat(EnumPropsType.STRENGTH)
-            stat.addValue(1)
-            viewModel.saveToDB()
+            viewModel.getStockStats().getStockStat(EnumPropsType.STRENGTH).addValue(1).saveToBox()
         }
         binding.buttonStrengthAddPercent.setOnClickListener {
-            val stat = viewModel.getStockStats().getStockStat(EnumPropsType.STRENGTH)
-            stat.addPercent(5)
-            viewModel.saveToDB()
+            viewModel.getStockStats().getStockStat(EnumPropsType.STRENGTH).addPercent(5).saveToBox()
         }
         binding.buttonAddHealthForStrength.setOnClickListener {
-            val stat = viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH_FOR_STRENGTH)
-            stat.addValue(1)
-            viewModel.saveToDB()
+            viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH_FOR_STRENGTH).addValue(1).saveToBox()
         }
         initObservers()
     }
 
     private fun initObservers() {
-        viewModel.getMobBattleStatsLiveData().observe(this) {
+        viewModel.getStockStatsPropLiveData().observe(this) {
             initBaseStats()
         }
     }

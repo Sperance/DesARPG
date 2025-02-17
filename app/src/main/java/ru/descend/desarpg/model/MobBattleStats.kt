@@ -4,6 +4,7 @@ import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.annotation.Index
 import io.objectbox.annotation.Transient
 import io.objectbox.relation.ToMany
 import io.objectbox.relation.ToOne
@@ -18,34 +19,33 @@ enum class EnumPropsType(val statName: String, val baseValue: Double) {
     HEALTH("Здоровье", 100.0),
     PHYSIC_ATTACK("Физ. атака", 5.0),
     STRENGTH("Сила", 1.0),
-    HEALTH_FOR_STRENGTH("Здоровье за ед. Силы", 1.0),
+    HEALTH_FOR_STRENGTH("Здоровье за ед. Силы", 1.0);
+
+    companion object {
+        fun getFromName(statName: String) : EnumPropsType? {
+            return entries.find { it.name == statName }
+        }
+    }
 }
 
 @Entity
-data class StockStatsProp(
-    @Id var id: Long = 0,
-    @Convert(converter = EnumPropsTypeConverter::class, dbType = String::class)
-    var type: EnumPropsType = EnumPropsType.UNDEFINED,
-    var valueP: Double = 0.0,
-    var percentP: Double = 0.0,
-    var description: String = "",
-) {
-    var statsObj: ToOne<MobBattleStats>? = null
+open class StockStatsProp: DoubleProp(), IntEntityObjectClass {
+    var mobBattleStats: ToOne<MobBattleStats>? = null
 
     @Transient
     private var currentValue = 0.0
 
     fun getWithPercent() = getValue().addPercent(getPercent())
 
-    fun getValue() = valueP
-    fun setValue(newValue: Number) { valueP = newValue.toDouble().to1Digits() }
-    fun removeValue(newValue: Number) { valueP = (valueP - newValue.toDouble()).to1Digits() }
-    fun addValue(newValue: Number) { valueP = (valueP + newValue.toDouble()).to1Digits() }
+    fun getValue() = valueProp
+    fun setValue(newValue: Number) : StockStatsProp { valueProp = newValue.toDouble().to1Digits() ; return this }
+    fun removeValue(newValue: Number) : StockStatsProp { valueProp = (valueProp - newValue.toDouble()).to1Digits() ; return this }
+    fun addValue(newValue: Number) : StockStatsProp { valueProp = (valueProp + newValue.toDouble()).to1Digits() ; return this }
 
-    fun getPercent() = percentP
-    fun setPercent(newValue: Number) { percentP = newValue.toDouble().to1Digits() }
-    fun removePercent(newValue: Number) { percentP = (percentP - newValue.toDouble()).to1Digits() }
-    fun addPercent(newValue: Number) { percentP = (percentP + newValue.toDouble()).to1Digits() }
+    fun getPercent() = percentProp
+    fun setPercent(newValue: Number) : StockStatsProp { percentProp = newValue.toDouble().to1Digits() ; return this }
+    fun removePercent(newValue: Number) : StockStatsProp { percentProp = (percentProp - newValue.toDouble()).to1Digits() ; return this }
+    fun addPercent(newValue: Number) : StockStatsProp { percentProp = (percentProp + newValue.toDouble()).to1Digits() ; return this }
 
     fun prepareInit() {
         currentValue = getValue().addPercent(getPercent()).to1Digits()
@@ -68,28 +68,28 @@ data class StockStatsProp(
         return StockStatsProp().apply {
             id = this@StockStatsProp.id
             type = this@StockStatsProp.type
-            valueP = this@StockStatsProp.valueP
-            percentP = this@StockStatsProp.percentP
+            valueProp = this@StockStatsProp.valueProp
+            percentProp = this@StockStatsProp.percentProp
             description = this@StockStatsProp.description
             currentValue = this@StockStatsProp.currentValue
         }
     }
 
-    fun saveToBox() {
+    override fun saveToBox() {
         applicationBox.boxFor(StockStatsProp::class.java).put(this)
     }
 
     override fun toString(): String {
-        return "StockStatsProp(id=$id, type='$type', value=$valueP, percent=$percentP, statsObj=${statsObj?.target?.id})"
+        return "StockStatsProp(id=$id, type='$type', valueProp=$valueProp, percentProp=$percentProp, mobBattleStats=${mobBattleStats?.target?.id})"
     }
 }
 
 @Entity
 data class MobBattleStats(
-    @Id var id: Long = 0,
+    @Id override var id: Long = 0,
     var uuid: String = UUID.randomUUID().toString()
-) {
-    @Backlink(to = "statsObj")
+): IntEntityObjectClass {
+    @Backlink(to = "mobBattleStats")
     lateinit var arrayStats: ToMany<StockStatsProp>
 
     /**
@@ -98,7 +98,7 @@ data class MobBattleStats(
     fun initializeAllStats() {
         arrayStats.clear()
         EnumPropsType.entries.filter { it != EnumPropsType.UNDEFINED }.forEach {
-            arrayStats.add(StockStatsProp().apply {type = it ; valueP = it.baseValue})
+            arrayStats.add(StockStatsProp().apply {type = it.name ; valueProp = it.baseValue})
         }
     }
 
@@ -106,6 +106,10 @@ data class MobBattleStats(
      * Получение базового значение характеристики без учёта любых модификаторов
      */
     fun getStockStat(stat: EnumPropsType): StockStatsProp {
+        return arrayStats.find { it.type == stat.name }!!
+    }
+
+    fun getStockStat(stat: String): StockStatsProp {
         return arrayStats.find { it.type == stat }!!
     }
 
@@ -115,16 +119,23 @@ data class MobBattleStats(
     fun getStat(stat: EnumPropsType) : StockStatsProp {
         val resultStat = getStockStat(stat)
         return when (resultStat.type) {
-            EnumPropsType.HEALTH -> {
+            EnumPropsType.HEALTH.name -> {
                 val propHealth = getStockStat(EnumPropsType.HEALTH)
                 val propStrength = getStockStat(EnumPropsType.STRENGTH)
                 val propHealthForStrength = getStockStat(EnumPropsType.HEALTH_FOR_STRENGTH)
-                StockStatsProp().apply {valueP = propHealth.getValue() + (propStrength.getWithPercent() * propHealthForStrength.getWithPercent()) ; percentP = propHealth.getPercent()}
+                StockStatsProp().apply {valueProp = propHealth.getValue() + (propStrength.getWithPercent() * propHealthForStrength.getWithPercent()) ; percentProp = propHealth.getPercent()}
             }
             else -> {
                 resultStat
             }
         }
+    }
+
+    override fun saveToBox() {
+        arrayStats.forEach {
+            applicationBox.boxFor(StockStatsProp::class.java).put(it)
+        }
+        applicationBox.boxFor(MobBattleStats::class.java).put(this)
     }
 
     override fun toString(): String {
