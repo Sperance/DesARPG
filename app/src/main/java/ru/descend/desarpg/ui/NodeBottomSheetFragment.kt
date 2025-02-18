@@ -23,6 +23,7 @@ class NodeBottomSheetFragment : BottomSheetDialogFragment() {
     interface OnNodeActivationListener {
         fun onActivateNodeRequested(node: SkillNodeEntity)
         fun onDeactivateNodeRequested(node: SkillNodeEntity)
+        fun onLevelUpNodeRequested(node: SkillNodeEntity)
     }
 
     fun setNode(node: SkillNodeEntity) {
@@ -46,6 +47,9 @@ class NodeBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.nodeName.setText(node.name)
+        binding.nodeLevel.setText("Level: ${node.level} / ${node.maxLevel}")
+
+        adapter.node = node
         binding.recyclerNodeStats.adapter = adapter
         binding.recyclerNodeStats.layoutManager = LinearLayoutManager(requireContext())
 
@@ -59,6 +63,9 @@ class NodeBottomSheetFragment : BottomSheetDialogFragment() {
             binding.deactivateButton.visibility = View.GONE
         }
 
+        binding.nodeLevel.visibility = if (node.maxLevel > 1) View.VISIBLE else View.GONE
+        binding.buttonAddLevel.visibility = if (node.maxLevel > 1) View.VISIBLE else View.GONE
+
         binding.activateButton.setOnClickListener {
             activationListener?.onActivateNodeRequested(node)
             dismiss()
@@ -66,6 +73,11 @@ class NodeBottomSheetFragment : BottomSheetDialogFragment() {
 
         binding.deactivateButton.setOnClickListener {
             activationListener?.onDeactivateNodeRequested(node)
+            dismiss()
+        }
+
+        binding.buttonAddLevel.setOnClickListener {
+            activationListener?.onLevelUpNodeRequested(node)
             dismiss()
         }
     }

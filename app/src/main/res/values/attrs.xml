@@ -5,6 +5,7 @@
         <attr name="text" format="string" />
         <attr name="textPrefix" format="string" />
         <attr name="textPostfix" format="string" />
+        <attr name="textBottom" format="string" />
         <attr name="textColor" format="color" />
         <attr name="textSize" format="dimension" />
         <attr name="textGravity">
@@ -32,6 +33,14 @@
         <attr name="postfixTextColor" format="color" />
         <attr name="postfixTextSize" format="dimension" />
         <attr name="postfixTextStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+            <flag name="bold_italic" value="3" />
+        </attr>
+        <attr name="bottomTextColor" format="color" />
+        <attr name="bottomTextSize" format="dimension" />
+        <attr name="bottomTextStyle">
             <flag name="normal" value="0" />
             <flag name="bold" value="1" />
             <flag name="italic" value="2" />

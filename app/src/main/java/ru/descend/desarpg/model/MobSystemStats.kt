@@ -1,14 +1,11 @@
 package ru.descend.desarpg.model
 
 import io.objectbox.annotation.Backlink
-import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToMany
 import io.objectbox.relation.ToOne
 import ru.descend.desarpg.applicationBox
-import ru.descend.desarpg.model.converters.EnumSystemStatsTypeConverter
-import ru.descend.desarpg.repository.InnerClasses
 import ru.descend.desarpg.to1Digits
 
 enum class EnumSystemStatsCategory {

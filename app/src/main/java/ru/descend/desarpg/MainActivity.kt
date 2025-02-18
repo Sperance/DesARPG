@@ -34,8 +34,6 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        applicationBox = viewModel.getBox()
-
         setSupportActionBar(binding.toolbar)
         navController = findNavController(R.id.fragment)
         appBarConfiguration = AppBarConfiguration(navController.graph)

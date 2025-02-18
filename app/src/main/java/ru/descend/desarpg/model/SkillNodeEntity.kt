@@ -2,6 +2,7 @@ package ru.descend.desarpg.model
 
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.annotation.Transient
 import io.objectbox.relation.ToMany
 import ru.descend.desarpg.R
 import ru.descend.desarpg.applicationBox
@@ -15,9 +16,17 @@ data class SkillNodeEntity(
     val positionY: Float,
     val iconInt: Int? = null,
     var connectionCode: Int? = null,
-    var isActivated: Boolean = false
+    var isActivated: Boolean = false,
+    var level: Int = 1,
+    var maxLevel: Int = 1,
+    var bonusForLevel: Int = 20
 ) : IntEntityObjectClass {
     lateinit var arrayStats: ToMany<DoubleProp>
+
+    fun getCurrentBonusForLevel(): Int {
+        if (level <= 1 || maxLevel <= 1 || bonusForLevel <= 0) return 0
+        return (level - 1) * bonusForLevel
+    }
 
     override fun saveToBox() {
         applicationBox.boxFor(SkillNodeEntity::class.java).put(this)
@@ -39,7 +48,8 @@ fun createLargeSkillTree() : ArrayList<SkillNodeEntity> {
         positionY = 0f,
         iconInt = R.drawable.ic_android_black_24dp,
         connectionCode = null,
-        isActivated = true
+        isActivated = true,
+        maxLevel = 5
     )
     centerNode.arrayStats.add(StockStatsProp().apply { type = EnumPropsType.HEALTH.name ; valueProp = 50.0 })
     nodes.add(centerNode)
@@ -147,6 +157,12 @@ data class MobSkillTreeStats(@Id override var id: Long = 0): IntEntityObjectClas
         arrayStats.filter { it.arrayStats.isResolved && it.isActivated && !it.arrayStats.isEmpty() }.forEach {
             result.addAll(it.arrayStats)
         }
+        return result
+    }
+
+    fun getActiveNodes() : ArrayList<SkillNodeEntity> {
+        val result = ArrayList<SkillNodeEntity>()
+        result.addAll(arrayStats.filter { it.isActivated && !it.arrayStats.isEmpty() })
         return result
     }
 

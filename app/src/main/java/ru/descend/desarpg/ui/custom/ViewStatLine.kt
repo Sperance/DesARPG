@@ -30,6 +30,7 @@ class ViewStatLine @JvmOverloads constructor(
     private var text: CharSequence = ""
     private var textPrefix: CharSequence = ""
     private var textPostfix: CharSequence = ""
+    private var textBottom: CharSequence = ""
 
     @ColorInt private var textColor: Int = ContextCompat.getColor(context, R.color.defaultText)
     private var textSize: Float = 14f
@@ -42,6 +43,10 @@ class ViewStatLine @JvmOverloads constructor(
     @ColorInt private var postfixTextColor: Int = ContextCompat.getColor(context, R.color.defaultText)
     private var postfixTextSize: Float = 14f
     private var postfixTextStyle: Int = Typeface.BOLD
+
+    @ColorInt private var bottomTextColor: Int = ContextCompat.getColor(context, android.R.color.darker_gray)
+    private var bottomTextSize: Float = 12f
+    private var bottomTextStyle: Int = Typeface.ITALIC
 
     private var mainTextStyle: Int = Typeface.NORMAL
 
@@ -58,6 +63,7 @@ class ViewStatLine @JvmOverloads constructor(
             text = a.getString(R.styleable.ViewStatLine_text) ?: ""
             textPrefix = a.getString(R.styleable.ViewStatLine_textPrefix) ?: ""
             textPostfix = a.getString(R.styleable.ViewStatLine_textPostfix) ?: ""
+            textBottom = a.getString(R.styleable.ViewStatLine_textBottom) ?: ""
 
             textColor = a.getColor(R.styleable.ViewStatLine_textColor, ContextCompat.getColor(context, R.color.defaultText))
             textSize = a.getDimension(R.styleable.ViewStatLine_textSize, 14f)
@@ -70,6 +76,10 @@ class ViewStatLine @JvmOverloads constructor(
             postfixTextColor = a.getColor(R.styleable.ViewStatLine_postfixTextColor, ContextCompat.getColor(context, R.color.defaultText))
             postfixTextSize = a.getDimension(R.styleable.ViewStatLine_postfixTextSize, 14f)
             postfixTextStyle = a.getInt(R.styleable.ViewStatLine_postfixTextStyle, Typeface.BOLD)
+
+            bottomTextColor = a.getColor(R.styleable.ViewStatLine_bottomTextColor, ContextCompat.getColor(context, android.R.color.darker_gray))
+            bottomTextSize = a.getDimension(R.styleable.ViewStatLine_bottomTextSize, 12f)
+            bottomTextStyle = a.getInt(R.styleable.ViewStatLine_bottomTextStyle, Typeface.ITALIC)
 
             mainTextStyle = a.getInt(R.styleable.ViewStatLine_mainTextStyle, Typeface.NORMAL)
 
@@ -91,10 +101,18 @@ class ViewStatLine @JvmOverloads constructor(
             textPrefixView.setTextColor(prefixTextColor)
             textPrefixView.textSize = prefixTextSize
             textPrefixView.typeface = Typeface.create(Typeface.SERIF, prefixTextStyle)
+
             textPostfixView.text = textPostfix
             textPostfixView.setTextColor(postfixTextColor)
             textPostfixView.textSize = postfixTextSize
             textPostfixView.typeface = Typeface.create(Typeface.SERIF, postfixTextStyle)
+
+            textBottomView.text = textBottom
+            textBottomView.setTextColor(bottomTextColor)
+            textBottomView.textSize = bottomTextSize
+            textBottomView.typeface = Typeface.create(Typeface.SERIF, bottomTextStyle)
+            textBottomView.visibility = if (textBottom.isEmpty()) GONE else VISIBLE
+
             textMain.text = text
             textMain.setTextColor(textColor)
             textMain.textSize = textSize
@@ -174,6 +192,11 @@ class ViewStatLine @JvmOverloads constructor(
         applyValues()
     }
 
+    fun setTextBottom(textBottom: CharSequence) {
+        this.textBottom = textBottom
+        applyValues()
+    }
+
     fun setTextColor(@ColorInt color: Int) {
         textColor = color
         applyValues()
@@ -216,6 +239,21 @@ class ViewStatLine @JvmOverloads constructor(
 
     fun setPostfixTextStyle(style: Int) {
         postfixTextStyle = style
+        applyValues()
+    }
+
+    fun setBottomTextColor(@ColorInt color: Int) {
+        bottomTextColor = color
+        applyValues()
+    }
+
+    fun setBottomTextSize(@Dimension size: Float) {
+        bottomTextSize = size
+        applyValues()
+    }
+
+    fun setBottomTextStyle(style: Int) {
+        bottomTextStyle = style
         applyValues()
     }
 

@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@android:color/transparent"
     android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
     android:orientation="horizontal">
 
     <com.google.android.material.card.MaterialCardView
@@ -17,46 +17,66 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="6dp">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/iconStart"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="0"
-                android:scaleType="centerCrop" />
-
-            <TextView
-                android:id="@+id/textPrefixView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="serif"
-                android:textColor="@color/defaultText"
-                android:textStyle="bold"
-                tools:text="Префикс: " />
-
-            <TextView
-                android:id="@+id/textMain"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:fontFamily="serif"
-                android:textColor="@color/defaultText"
-                tools:text="Текст" />
+                android:orientation="horizontal"
+                android:padding="6dp">
+
+                <ImageView
+                    android:id="@+id/iconStart"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="0"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/textPrefixView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="serif"
+                    android:textColor="@color/defaultText"
+                    android:textStyle="bold"
+                    tools:text="Префикс: " />
+
+                <TextView
+                    android:id="@+id/textMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="serif"
+                    android:textColor="@color/defaultText"
+                    tools:text="Текст" />
+
+                <TextView
+                    android:id="@+id/textPostfixView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="serif"
+                    android:textColor="@color/defaultText"
+                    android:textStyle="bold"
+                    tools:text="Постфикс" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/textPostfixView"
-                android:layout_width="wrap_content"
+                android:id="@+id/textBottomView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="-3dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="serif"
-                android:textColor="@color/defaultText"
-                android:textStyle="bold"
-                tools:text="Постфикс" />
+                android:gravity="end"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp"
+                tools:text="Все характеристики +40%" />
 
         </LinearLayout>
 

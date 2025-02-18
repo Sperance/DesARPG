@@ -40,5 +40,4 @@ class MainActivityVM(private val repoMob: BoxMobRepository) : ViewModel() {
     fun getStockStats() = repoMob.getStockStats()
     fun getSkillTreeNodes() = repoMob.getCurrentSkillTreeStats()
     fun getAllBoxes() = repoMob.getAllBoxes()
-    fun getBox() = repoMob.getBox()
 }

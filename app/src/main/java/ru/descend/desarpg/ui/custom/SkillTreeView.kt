@@ -225,6 +225,15 @@ class SkillTreeView @JvmOverloads constructor(
                         showDeactivationError(canDeactivateNode)
                     }
                 }
+
+                override fun onLevelUpNodeRequested(node: SkillNodeEntity) {
+                    if (node.level < node.maxLevel) {
+                        node.level++
+                        node.saveToBox()
+                    } else {
+                        showError("Уровень Новыка не может быть повышен. Он уже достиг максимума (${node.maxLevel})")
+                    }
+                }
             })
         }
 
@@ -259,6 +268,14 @@ class SkillTreeView @JvmOverloads constructor(
         AlertDialog.Builder(context)
             .setTitle("Ошибка")
             .setMessage("Узел не может быть деактивирован.\n$text")
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
+    private fun showError(text: String) {
+        AlertDialog.Builder(context)
+            .setTitle("Ошибка")
+            .setMessage(text)
             .setPositiveButton("OK", null)
             .show()
     }

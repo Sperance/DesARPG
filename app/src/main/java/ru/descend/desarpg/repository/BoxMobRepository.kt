@@ -2,6 +2,7 @@ package ru.descend.desarpg.repository
 
 import io.objectbox.Box
 import io.objectbox.BoxStore
+import ru.descend.desarpg.addPercent
 import ru.descend.desarpg.applicationBox
 import ru.descend.desarpg.log
 import ru.descend.desarpg.model.EnumPropsType
@@ -48,13 +49,20 @@ class BoxMobRepository(private val currentBox: BoxStore) {
     private val currentStats = getCurrentMob().mobBattleStats.target
     fun getStockStats() = currentStats
     fun getCurrentStats(): MobBattleStats {
+
         val newMobStats = MobBattleStats()
-        newMobStats.arrayStats.addAll(currentStats.arrayStats.map { it.copy() })
-        getCurrentSkillTreeStats().getAllNodeStats().forEach { skillStat ->
-            val stat = newMobStats.getStockStat(skillStat.type)
-            stat.addValue(skillStat.valueProp)
-            stat.addPercent(skillStat.percentProp)
+
+        newMobStats.arrayStats.addAll(getStockStats().arrayStats.map { it.copy() })
+
+        val curSkillStats = getCurrentSkillTreeStats()
+        curSkillStats.getActiveNodes().forEach { node  ->
+            node.arrayStats.forEach { stat ->
+                val addingStat = newMobStats.getStockStat(stat.type)
+                addingStat.addValue(stat.valueProp.addPercent(node.getCurrentBonusForLevel()))
+                addingStat.addPercent(stat.percentProp.addPercent(node.getCurrentBonusForLevel()))
+            }
         }
+
         return newMobStats
     }
 

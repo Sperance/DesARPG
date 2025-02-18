@@ -24,6 +24,10 @@ fun Double.addPercent(value: Double) : Double {
     return (this + getPercent(value)).to1Digits()
 }
 
+fun Double.addPercent(value: Int) : Double {
+    return (this + getPercent(value.toDouble())).to1Digits()
+}
+
 fun Double.removePercent(value: Double) : Double {
     return (this - getPercent(value)).to1Digits()
 }

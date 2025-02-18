@@ -1,16 +1,13 @@
 package ru.descend.desarpg.model
 
 import io.objectbox.annotation.Backlink
-import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
-import io.objectbox.annotation.Index
 import io.objectbox.annotation.Transient
 import io.objectbox.relation.ToMany
 import io.objectbox.relation.ToOne
 import ru.descend.desarpg.addPercent
 import ru.descend.desarpg.applicationBox
-import ru.descend.desarpg.model.converters.EnumPropsTypeConverter
 import ru.descend.desarpg.to1Digits
 import java.util.UUID
 
