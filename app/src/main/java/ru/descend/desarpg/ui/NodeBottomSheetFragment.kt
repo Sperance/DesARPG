@@ -9,7 +9,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ru.descend.desarpg.databinding.BottomSheetNodeBinding
 import ru.descend.desarpg.model.DoubleProp
 import ru.descend.desarpg.model.SkillNodeEntity
-import ru.descend.desarpg.model.StockStatsProp
 import ru.descend.desarpg.ui.adapters.AdapterSkillNodeList
 
 class NodeBottomSheetFragment : BottomSheetDialogFragment() {
@@ -47,9 +46,10 @@ class NodeBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.nodeName.setText(node.name)
-        binding.nodeLevel.setText("Level: ${node.level} / ${node.maxLevel}")
 
-        adapter.node = node
+        if (node.level > 1) binding.nodeLevel.setText("Увеличение показателей на ${(node.level - 1) * node.bonusForLevel}%")
+        binding.nodeLevel.setTextPostfix("Level: ${node.level} / ${node.maxLevel}")
+
         binding.recyclerNodeStats.adapter = adapter
         binding.recyclerNodeStats.layoutManager = LinearLayoutManager(requireContext())
 

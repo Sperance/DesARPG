@@ -87,6 +87,10 @@ abstract class DesAdapter<T, VM: ViewBinding>(private val classBinding: KClass<*
         onNewData(newList)
     }
 
+    fun clear() {
+        onNewData(arrayListOf())
+    }
+
     /**
      * Удаление объекта из общего списка
      */
@@ -116,6 +120,17 @@ abstract class DesAdapter<T, VM: ViewBinding>(private val classBinding: KClass<*
      * Задать список элементов адаптера
      */
     open fun onNewData(newData: Array<T>){
+        val array = newData.toCollection((ArrayList()))
+        val diffResult = DiffUtil.calculateDiff(MyDiffUtilCallback(array , adapterList))
+        diffResult.dispatchUpdatesTo(this)
+        adapterList.clear()
+        adapterList.addAll(newData)
+    }
+
+    /**
+     * Задать список элементов адаптера
+     */
+    open fun onNewData(newData: Collection<T>){
         val array = newData.toCollection((ArrayList()))
         val diffResult = DiffUtil.calculateDiff(MyDiffUtilCallback(array , adapterList))
         diffResult.dispatchUpdatesTo(this)

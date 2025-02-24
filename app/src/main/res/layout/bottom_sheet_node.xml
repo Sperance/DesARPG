@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -11,24 +12,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:mainTextStyle="bold"
-        app:text="Sample text"
         app:textGravity="center"
-        app:textSize="8sp" />
+        app:textSize="8sp"
+        tools:text="Sample text" />
 
     <ru.descend.desarpg.ui.custom.ViewStatLine
         android:id="@+id/node_level"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:mainTextStyle="italic"
-        android:layout_gravity="end"
-        app:text="Level: 1 / 5"
-        app:textGravity="center" />
+        android:layout_marginTop="6dp"
+        app:cardStrokeColor="@color/defaultStrokeColor"
+        app:cardStrokeWidth="2dp"
+        tools:text="Level: 1 / 5"
+        tools:textPostfix="Level: 1 / 5" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_node_stats"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp" />
+        android:layout_margin="12dp"
+        tools:itemCount="3"
+        tools:listitem="@layout/adapter_item_node_skill" />
 
     <Button
         android:id="@+id/activate_button"

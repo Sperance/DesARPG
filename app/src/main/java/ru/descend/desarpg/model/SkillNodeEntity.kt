@@ -2,7 +2,6 @@ package ru.descend.desarpg.model
 
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
-import io.objectbox.annotation.Transient
 import io.objectbox.relation.ToMany
 import ru.descend.desarpg.R
 import ru.descend.desarpg.applicationBox
@@ -51,7 +50,8 @@ fun createLargeSkillTree() : ArrayList<SkillNodeEntity> {
         isActivated = true,
         maxLevel = 5
     )
-    centerNode.arrayStats.add(StockStatsProp().apply { type = EnumPropsType.HEALTH.name ; valueProp = 50.0 })
+    centerNode.arrayStats.add(StockStatsProp().apply { type = EnumPropsType.HEALTH.name ; valueProp = 50.0 ; percentProp = 10.0 })
+    centerNode.arrayStats.add(StockStatsProp().apply { type = EnumPropsType.STRENGTH.name ; percentProp = 10.0 })
     nodes.add(centerNode)
 
     // Узлы первого уровня (6 узлов вокруг центрального)

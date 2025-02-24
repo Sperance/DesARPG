@@ -4,7 +4,6 @@ import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
 import ru.descend.desarpg.applicationBox
-import ru.descend.desarpg.repository.OuterClasses
 import java.util.UUID
 
 @Entity
@@ -16,6 +15,8 @@ data class MobMain(
     lateinit var mobBattleStats: ToOne<MobBattleStats>
     lateinit var mobSystemStats: ToOne<MobSystemStats>
     lateinit var mobSkillTreeStats: ToOne<MobSkillTreeStats>
+    lateinit var mobInventory: ToOne<MobInventory>
+
     override fun saveToBox() {
         applicationBox.boxFor(MobMain::class.java).put(this)
     }
