@@ -55,4 +55,67 @@
         <attr name="cardStrokeColor" format="color" />
         <attr name="cardStrokeWidth" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="ViewWorkObject">
+        <!-- Общие атрибуты -->
+        <attr name="itemName" format="string"/>
+        <attr name="timerText" format="string"/>
+        <attr name="levelText" format="string"/>
+        <attr name="nextItemText" format="string"/>
+        <attr name="expText" format="string"/>
+        <attr name="progressBarProgress" format="integer"/>
+        <attr name="textColor"/>
+        <attr name="textSize"/>
+
+        <!-- Атрибуты для item_name -->
+        <attr name="itemNameTextColor" format="color"/>
+        <attr name="itemNameTextSize" format="dimension"/>
+        <attr name="itemNameTypeface" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+            <enum name="bold_italic" value="3"/>
+        </attr>
+
+        <!-- Атрибуты для timer_text -->
+        <attr name="timerTextColor" format="color"/>
+        <attr name="timerTextSize" format="dimension"/>
+        <attr name="timerTypeface" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+            <enum name="bold_italic" value="3"/>
+        </attr>
+
+        <!-- Атрибуты для level_text -->
+        <attr name="levelTextColor" format="color"/>
+        <attr name="levelTextSize" format="dimension"/>
+        <attr name="levelTypeface" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+            <enum name="bold_italic" value="3"/>
+        </attr>
+
+        <!-- Атрибуты для next_item_text -->
+        <attr name="nextItemTextColor" format="color"/>
+        <attr name="nextItemTextSize" format="dimension"/>
+        <attr name="nextItemTypeface" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+            <enum name="bold_italic" value="3"/>
+        </attr>
+
+        <!-- Атрибуты для exp_text -->
+        <attr name="expTextColor" format="color"/>
+        <attr name="expTextSize" format="dimension"/>
+        <attr name="expTypeface" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+            <enum name="bold_italic" value="3"/>
+        </attr>
+    </declare-styleable>
+
 </resources>
