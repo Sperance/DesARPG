@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.FragmentWorkMining">
+
+    <ru.descend.desarpg.ui.custom.ViewStatLine
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardStrokeColor="@color/cardview_dark_background"
+        app:cardStrokeWidth="1dp"
+        app:text="Добыча в шахте"
+        app:textGravity="center"
+        app:textSize="8sp"
+        tools:ignore="SmallSp" />
+
+    <ru.descend.desarpg.ui.custom.ViewStatLine
+        android:id="@+id/text_level_mining"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:text="1"
+        app:textGravity="end"
+        app:textPrefix="Уровень копания: " />
+
+    <ru.descend.desarpg.ui.custom.ViewStatLine
+        android:id="@+id/text_level_mining_all_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:text="0"
+        app:textGravity="end"
+        app:textPrefix="Всего выкопано ресурсов: " />
+
+    <ru.descend.desarpg.ui.custom.ViewWorkObject
+        android:id="@+id/work_current_object"
+        android:layout_width="match_parent"
+        app:itemName="Камень"
+        android:layout_margin="6dp"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

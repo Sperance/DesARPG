@@ -19,6 +19,7 @@ class FragmentMobInventory : BaseFragment<FragmentMobInventoryBinding>(FragmentM
             viewModel.getInventory().addItem(item)
         }
         binding.buttonAddEquipItem.setOnClickListener {
+            log("cur inv: ${viewModel.getInventory().uuid}")
             applicationBox.boxFor(BaseItem::class.java).all.forEach {
                 log("item: $it")
             }

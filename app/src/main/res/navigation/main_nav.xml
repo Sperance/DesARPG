@@ -49,6 +49,15 @@
     <fragment
         android:id="@+id/fragmentWorkObject"
         android:name="ru.descend.desarpg.ui.FragmentWorkObject"
-        android:label="fragment_work_object"
-        tools:layout="@layout/fragment_work_object" />
+        android:label="Список работы"
+        tools:layout="@layout/fragment_work_object" >
+        <action
+            android:id="@+id/action_fragmentWorkObject_to_fragmentWorkMining"
+            app:destination="@id/fragmentWorkMining" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentWorkMining"
+        android:name="ru.descend.desarpg.ui.FragmentWorkMining"
+        android:label="Шахта"
+        tools:layout="@layout/fragment_work_mining" />
 </navigation>

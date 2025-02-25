@@ -1,5 +1,6 @@
 package ru.descend.desarpg.koin
 
+import io.objectbox.BoxStore
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -13,7 +14,7 @@ import java.io.File
 val objectBoxModule = module {
     single {
         val application = androidApplication() as AppController
-//        BoxStore.deleteAllFiles(File(application.filesDir, TEST_DIRECTORY))
+        BoxStore.deleteAllFiles(File(application.filesDir, TEST_DIRECTORY))
         val box = MyObjectBox.builder().directory(File(application.filesDir, TEST_DIRECTORY)).androidContext(application).build()
         applicationBox = box
         box

@@ -107,6 +107,12 @@ class ViewWorkObject @JvmOverloads constructor(
         binding.progressBar.progress = progress
     }
 
+    fun addProgressBarProgress(progress: Int) {
+        binding.progressBar.progress += progress
+    }
+
+    fun getProgressBarProgress() = binding.progressBar.progress
+
     fun setItemNameTextColor(@ColorInt color: Int) {
         binding.itemName.setTextColor(color)
     }

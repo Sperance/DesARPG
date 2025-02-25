@@ -16,26 +16,27 @@ enum class EnumSystemStatsCategory {
 
 enum class EnumSystemStatsType(val statName: String, val category: EnumSystemStatsCategory, val baseValue: Double) {
     UNDEFINED("", EnumSystemStatsCategory.UNDEFINED,.0),
-
     EXPERIENCE("Опыт", EnumSystemStatsCategory.MOB_MAIN,0.0),
-
-    LAST_ENTER_DATE("Дата последнего входа",
-        EnumSystemStatsCategory.MOB_ADDITIONAL, System.currentTimeMillis().toDouble()),
-    COUNT_ENTER_SYSTEM("Количество входов в систему", EnumSystemStatsCategory.MOB_ADDITIONAL, 0.0)
+    LAST_ENTER_DATE("Дата последнего входа", EnumSystemStatsCategory.MOB_ADDITIONAL, System.currentTimeMillis().toDouble()),
+    COUNT_ENTER_SYSTEM("Количество входов в систему", EnumSystemStatsCategory.MOB_ADDITIONAL, 0.0),
+    COUNT_MINING_ALL_ITEMS("Всего выкопано ресурсов", EnumSystemStatsCategory.MOB_ADDITIONAL, 0.0),
 }
 
 @Entity
 open class SystemStatsProp: DoubleProp(), IntEntityObjectClass {
     var mobSystemStats: ToOne<MobSystemStats>? = null
 
-    fun add(count: Number) {
+    fun add(count: Number) : SystemStatsProp {
         valueProp = (valueProp + count.toDouble()).to1Digits()
+        return this
     }
-    fun rem(count: Number) {
+    fun rem(count: Number) : SystemStatsProp {
         valueProp = (valueProp - count.toDouble()).to1Digits()
+        return this
     }
-    fun set(count: Number) {
+    fun set(count: Number) : SystemStatsProp {
         valueProp = count.toDouble().to1Digits()
+        return this
     }
 
     override fun saveToBox() {
