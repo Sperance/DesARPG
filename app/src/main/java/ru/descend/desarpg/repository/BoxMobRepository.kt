@@ -9,6 +9,7 @@ import ru.descend.desarpg.model.MobInventory
 import ru.descend.desarpg.model.MobMain
 import ru.descend.desarpg.model.MobSkillTreeStats
 import ru.descend.desarpg.model.MobSystemStats
+import ru.descend.desarpg.model.MobWorkStats
 
 class BoxMobRepository(currentBox: BoxStore) {
 
@@ -16,8 +17,6 @@ class BoxMobRepository(currentBox: BoxStore) {
     private var currentMob: MobMain? = null
     fun getCurrentMob(): MobMain {
         if (mobMainBox.isEmpty) {
-            log("[CREATED]")
-
             val newMob = MobMain(name = "Player")
 
             val newMobBattleStats = MobBattleStats()
@@ -32,6 +31,10 @@ class BoxMobRepository(currentBox: BoxStore) {
             newMobSkillTreeStats.initializeAllStats()
             newMob.mobSkillTreeStats.target = newMobSkillTreeStats
 
+            val newMobWorks = MobWorkStats()
+            newMobWorks.initializeAllStats()
+            newMob.mobWorks.target = newMobWorks
+
             val newMobInventory = MobInventory()
             newMob.mobInventory.target = newMobInventory
 
@@ -39,11 +42,7 @@ class BoxMobRepository(currentBox: BoxStore) {
 
             return currentMob!!
         } else {
-            log("[ALREADY]")
-
             currentMob = mobMainBox.get(1)
-
-//            log("INVENTORY ALREADY: ${getCurrentInventory()}")
             return currentMob!!
         }
     }
@@ -78,27 +77,13 @@ class BoxMobRepository(currentBox: BoxStore) {
         return currentSkillTreeStats
     }
 
+    private val currentWorkStats = getCurrentMob().mobWorks.target
+    fun getCurrentWorkStats(): MobWorkStats {
+        return currentWorkStats
+    }
+
     private val currentMobInventory = getCurrentMob().mobInventory.target
     fun getCurrentInventory(): MobInventory {
         return currentMobInventory
-    }
-
-    fun test_inventory_mob() {
-        val inv = getCurrentInventory()
-        log("START INV: $inv")
-
-        val newItem1 = BaseItem(name = "Сфера стража")
-        inv.addItem(newItem1)
-
-        log("AFTER ADD 1: $inv")
-        inv.addItem(newItem1)
-
-        log("AFTER ADD 2: $inv")
-
-        log("BASE INV: ${getCurrentInventory()}")
-
-        getCurrentInventory().clearInventory()
-
-        log("AFTER CLEAR: ${getCurrentInventory()}")
     }
 }

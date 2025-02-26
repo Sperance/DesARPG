@@ -11,15 +11,14 @@ data class MobMain(
     @Id override var id: Long = 0,
     var name: String = UUID.randomUUID().toString(),
     var description: String = ""
-): IntEntityObjectClass {
+): AbsEntityBase<MobMain> {
     lateinit var mobBattleStats: ToOne<MobBattleStats>
     lateinit var mobSystemStats: ToOne<MobSystemStats>
     lateinit var mobSkillTreeStats: ToOne<MobSkillTreeStats>
     lateinit var mobInventory: ToOne<MobInventory>
+    lateinit var mobWorks: ToOne<MobWorkStats>
 
-    override fun saveToBox() {
-        applicationBox.boxFor(MobMain::class.java).put(this)
-    }
+    override fun getClassObj(): Class<MobMain> = MobMain::class.java
     override fun toString(): String {
         return "MobMain(id=$id, name='$name', description='$description')"
     }

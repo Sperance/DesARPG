@@ -58,6 +58,11 @@
     <fragment
         android:id="@+id/fragmentWorkMining"
         android:name="ru.descend.desarpg.ui.FragmentWorkMining"
-        android:label="Шахта"
-        tools:layout="@layout/fragment_work_mining" />
+        android:label="Добыча"
+        tools:layout="@layout/fragment_work_mining">
+        <argument
+            android:name="stat"
+            app:argType="ru.descend.desarpg.model.EnumWorkStatsType"
+            android:defaultValue="UNDEFINED" />
+    </fragment>
 </navigation>

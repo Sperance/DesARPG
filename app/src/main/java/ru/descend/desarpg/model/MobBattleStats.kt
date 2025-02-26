@@ -26,7 +26,13 @@ enum class EnumPropsType(val statName: String, val baseValue: Double) {
 }
 
 @Entity
-open class StockStatsProp: DoubleProp(), IntEntityObjectClass {
+open class StockStatsProp(
+    @Id override var id: Long = 0,
+    var type: String = "",
+    var description: String = "",
+    var valueProp: Double = 0.0,
+    var percentProp: Double = 0.0,
+): AbsEntityBase<StockStatsProp> {
     var mobBattleStats: ToOne<MobBattleStats>? = null
 
     @Transient
@@ -72,10 +78,8 @@ open class StockStatsProp: DoubleProp(), IntEntityObjectClass {
         }
     }
 
-    override fun saveToBox() {
-        applicationBox.boxFor(StockStatsProp::class.java).put(this)
-    }
-
+    override fun getClassObj(): Class<StockStatsProp> = StockStatsProp::class.java
+    override fun targetLinkToOne(): ToOne<*>? = mobBattleStats
     override fun toString(): String {
         return "StockStatsProp(id=$id, type='$type', valueProp=$valueProp, percentProp=$percentProp, mobBattleStats=${mobBattleStats?.target?.id})"
     }
@@ -85,13 +89,10 @@ open class StockStatsProp: DoubleProp(), IntEntityObjectClass {
 data class MobBattleStats(
     @Id override var id: Long = 0,
     var uuid: String = UUID.randomUUID().toString()
-): IntEntityObjectClass {
+): AbsEntityBase<MobBattleStats> {
     @Backlink(to = "mobBattleStats")
     lateinit var arrayStats: ToMany<StockStatsProp>
 
-    /**
-     * По-умолчанию сохраняем все характеристики
-     */
     fun initializeAllStats() {
         arrayStats.clear()
         EnumPropsType.entries.filter { it != EnumPropsType.UNDEFINED }.forEach {
@@ -99,9 +100,6 @@ data class MobBattleStats(
         }
     }
 
-    /**
-     * Получение базового значение характеристики без учёта любых модификаторов
-     */
     fun getStockStat(stat: EnumPropsType): StockStatsProp {
         return arrayStats.find { it.type == stat.name }!!
     }
@@ -110,9 +108,6 @@ data class MobBattleStats(
         return arrayStats.find { it.type == stat }!!
     }
 
-    /**
-     * Получение модифицированного значения характеристики
-     */
     fun getStat(stat: EnumPropsType) : StockStatsProp {
         val resultStat = getStockStat(stat)
         return when (resultStat.type) {
@@ -128,13 +123,11 @@ data class MobBattleStats(
         }
     }
 
+    override fun getClassObj(): Class<MobBattleStats> = MobBattleStats::class.java
     override fun saveToBox() {
-        arrayStats.forEach {
-            applicationBox.boxFor(StockStatsProp::class.java).put(it)
-        }
-        applicationBox.boxFor(MobBattleStats::class.java).put(this)
+        arrayStats.forEach { it.saveToBox() }
+        super.saveToBox()
     }
-
     override fun toString(): String {
         return "MobBattleStats(id=$id, uuid=$uuid, arrayStats=\n${arrayStats.joinToString("\n")})"
     }

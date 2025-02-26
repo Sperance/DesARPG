@@ -8,6 +8,7 @@
     tools:context=".ui.FragmentWorkMining">
 
     <ru.descend.desarpg.ui.custom.ViewStatLine
+        android:id="@+id/text_work_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -35,6 +36,24 @@
         app:text="0"
         app:textGravity="end"
         app:textPrefix="Всего выкопано ресурсов: " />
+
+    <ru.descend.desarpg.ui.custom.ViewStatLine
+        android:id="@+id/text_experience_current"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:text="0"
+        app:textGravity="end"
+        app:textPrefix="Опыта: " />
+
+    <ru.descend.desarpg.ui.custom.ViewStatLine
+        android:id="@+id/text_experience_need"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:text="0"
+        app:textGravity="end"
+        app:textPrefix="Опыта до следующего уровня: " />
 
     <ru.descend.desarpg.ui.custom.ViewWorkObject
         android:id="@+id/work_current_object"

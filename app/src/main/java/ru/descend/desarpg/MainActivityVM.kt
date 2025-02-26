@@ -10,30 +10,6 @@ import ru.descend.desarpg.repository.BoxMobRepository
 
 class MainActivityVM(private val repoMob: BoxMobRepository) : ViewModel() {
 
-    private var mobBattleStatsLiveData: ObjectBoxLiveData<MobBattleStats?>? = null
-    fun getMobBattleStatsLiveData(): ObjectBoxLiveData<MobBattleStats?> {
-        if (mobBattleStatsLiveData == null) {
-            mobBattleStatsLiveData = ObjectBoxLiveData(applicationBox.boxFor(MobBattleStats::class.java).query().build())
-        }
-        return mobBattleStatsLiveData as ObjectBoxLiveData<MobBattleStats?>
-    }
-
-    private var mobLiveData: ObjectBoxLiveData<MobMain?>? = null
-    fun getMobLiveData(): ObjectBoxLiveData<MobMain?> {
-        if (mobLiveData == null) {
-            mobLiveData = ObjectBoxLiveData(applicationBox.boxFor(MobMain::class.java).query().build())
-        }
-        return mobLiveData as ObjectBoxLiveData<MobMain?>
-    }
-
-    private var stockStatsPropLiveData: ObjectBoxLiveData<StockStatsProp?>? = null
-    fun getStockStatsPropLiveData(): ObjectBoxLiveData<StockStatsProp?> {
-        if (stockStatsPropLiveData == null) {
-            stockStatsPropLiveData = ObjectBoxLiveData(applicationBox.boxFor(StockStatsProp::class.java).query().build())
-        }
-        return stockStatsPropLiveData as ObjectBoxLiveData<StockStatsProp?>
-    }
-
     private var itemsLiveData: ObjectBoxLiveData<BaseItem?>? = null
     fun getItemsLiveData(): ObjectBoxLiveData<BaseItem?> {
         if (itemsLiveData == null) {
@@ -47,6 +23,6 @@ class MainActivityVM(private val repoMob: BoxMobRepository) : ViewModel() {
     fun getCurrentSystemStats() = repoMob.getCurrentSystemStats()
     fun getStockStats() = repoMob.getStockStats()
     fun getSkillTreeNodes() = repoMob.getCurrentSkillTreeStats()
+    fun getWorkStats() = repoMob.getCurrentWorkStats()
     fun getInventory() = repoMob.getCurrentInventory()
-    fun testInventory() = repoMob.test_inventory_mob()
 }

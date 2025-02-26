@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath(libs.gradle) // Версия AGP
         classpath(libs.objectbox.gradle.plugin) // Плагин ObjectBox
+        classpath(libs.androidx.navigation.navigation.safe.args.gradle.plugin)
     }
 }
 

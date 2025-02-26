@@ -7,7 +7,6 @@ import io.objectbox.annotation.Id
 import io.objectbox.relation.ToMany
 import io.objectbox.relation.ToOne
 import ru.descend.desarpg.applicationBox
-import ru.descend.desarpg.log
 import java.util.UUID
 
 enum class EnumItemCategory(val categoryName: String) {
@@ -46,13 +45,14 @@ open class BaseItem(
     var category: String = EnumItemCategory.DEFAULT.name,
     var rarity: String = EnumItemRarity.DEFAULT.name,
     var price: Double = 1.0
-) : AbsEntityBase<BaseItem>(applicationBox.boxFor(BaseItem::class.java)) {
+) : AbsEntityBase<BaseItem> {
     var mobInventory: ToOne<MobInventory>? = null
-    override fun targetLinkToOne() = mobInventory
 
     fun getCategoryEnum() = EnumItemCategory.getFromName(category)
     fun getRarityEnum() = EnumItemRarity.getFromName(rarity)
 
+    override fun getClassObj(): Class<BaseItem> = BaseItem::class.java
+    override fun targetLinkToOne() = mobInventory
     override fun toString(): String {
         return "BaseItem(id=$id, name='$name', description='$description', count=$count, category='$category', rarity='$rarity', price=$price, inv=${mobInventory?.target?.uuid})"
     }
@@ -62,7 +62,7 @@ open class BaseItem(
 data class MobInventory(
     @Id override var id: Long = 0,
     var uuid: String = UUID.randomUUID().toString()
-): AbsEntityBase<MobInventory>(applicationBox.boxFor(MobInventory::class.java)) {
+): AbsEntityBase<MobInventory> {
     @Backlink(to = "mobInventory")
     lateinit var arrayStats: ToMany<BaseItem>
 
@@ -71,8 +71,7 @@ data class MobInventory(
         if (findedItem != null) {
             findedItem.count += item.count
             findedItem.saveToBox()
-        }
-        else {
+        } else {
             arrayStats.add(item)
             item.mobInventory?.target = this
             item.saveToBox()
@@ -80,13 +79,12 @@ data class MobInventory(
     }
 
     fun clearInventory() {
-        for (item in arrayStats) {
-            item.removeFromBox()
-        }
+        for (item in arrayStats) item.removeFromBox()
         arrayStats.clear()
         saveToBox()
     }
 
+    override fun getClassObj(): Class<MobInventory> = MobInventory::class.java
     override fun toString(): String {
         return "MobInventory(id=$id, uuid=$uuid, boxItemsCount=${applicationBox.boxFor(BaseItem::class.java).count()} arrayStats=\n${arrayStats.joinToString("\n")})"
     }

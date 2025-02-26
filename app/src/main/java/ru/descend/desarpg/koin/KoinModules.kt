@@ -6,8 +6,8 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import ru.descend.desarpg.AppController
 import ru.descend.desarpg.MainActivityVM
-import ru.descend.desarpg.MyObjectBox
 import ru.descend.desarpg.applicationBox
+import ru.descend.desarpg.model.MyObjectBox
 import ru.descend.desarpg.repository.BoxMobRepository
 import java.io.File
 

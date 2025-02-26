@@ -4,6 +4,7 @@ plugins {
     id("io.objectbox")
     id("kotlin-android")
     id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -54,8 +55,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.junit)
-    implementation(libs.junit.jupiter)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(kotlin("reflect"))
     implementation(libs.androidx.navigation.ui.ktx)

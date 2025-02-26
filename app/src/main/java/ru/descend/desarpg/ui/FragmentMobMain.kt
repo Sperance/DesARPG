@@ -16,30 +16,30 @@ class FragmentMobMain : BaseFragment<FragmentMobMainBinding>(FragmentMobMainBind
     override fun setUpViews() {
         binding.buttonHealthTo50.setOnClickListener {
             viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH).setValue(50).saveToBox()
+            initBaseStats()
         }
         binding.buttonHealthAddPercent.setOnClickListener {
             viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH).addPercent(5).saveToBox()
+            initBaseStats()
         }
         binding.buttonHealthRemovePercent.setOnClickListener {
             viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH).removePercent(5).saveToBox()
+            initBaseStats()
         }
         binding.buttonHealthAdd.setOnClickListener {
             viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH).addValue(2).saveToBox()
+            initBaseStats()
         }
         binding.buttonStrengthAdd.setOnClickListener {
             viewModel.getStockStats().getStockStat(EnumPropsType.STRENGTH).addValue(1).saveToBox()
+            initBaseStats()
         }
         binding.buttonStrengthAddPercent.setOnClickListener {
             viewModel.getStockStats().getStockStat(EnumPropsType.STRENGTH).addPercent(5).saveToBox()
+            initBaseStats()
         }
         binding.buttonAddHealthForStrength.setOnClickListener {
             viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH_FOR_STRENGTH).addValue(1).saveToBox()
-        }
-        initObservers()
-    }
-
-    private fun initObservers() {
-        viewModel.getStockStatsPropLiveData().observe(this) {
             initBaseStats()
         }
     }

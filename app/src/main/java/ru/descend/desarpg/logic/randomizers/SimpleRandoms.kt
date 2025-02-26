@@ -10,6 +10,10 @@ fun randInt(from: Int, to: Int) : Int {
     return Random(System.currentTimeMillis() + countRandomGenerator++).nextInt(from..to)
 }
 
+fun randInt(range: IntRange) : Int {
+    return Random(System.currentTimeMillis() + countRandomGenerator++).nextInt(range)
+}
+
 fun randLong(from: Long, to: Long) : Long {
     return Random(System.currentTimeMillis() + countRandomGenerator++).nextLong(from..to)
 }

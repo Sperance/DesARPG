@@ -4,7 +4,6 @@ import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToMany
 import ru.descend.desarpg.R
-import ru.descend.desarpg.applicationBox
 
 @Entity
 data class SkillNodeEntity(
@@ -19,18 +18,15 @@ data class SkillNodeEntity(
     var level: Int = 1,
     var maxLevel: Int = 1,
     var bonusForLevel: Int = 20
-) : IntEntityObjectClass {
-    lateinit var arrayStats: ToMany<DoubleProp>
+) : AbsEntityBase<SkillNodeEntity> {
+    lateinit var arrayStats: ToMany<StockStatsProp>
 
     fun getCurrentBonusForLevel(): Int {
         if (level <= 1 || maxLevel <= 1 || bonusForLevel <= 0) return 0
         return (level - 1) * bonusForLevel
     }
 
-    override fun saveToBox() {
-        applicationBox.boxFor(SkillNodeEntity::class.java).put(this)
-    }
-
+    override fun getClassObj(): Class<SkillNodeEntity> = SkillNodeEntity::class.java
     override fun toString(): String {
         return "SkillNodeEntity(id=$id, name='$name', code=$code, iconInt=$iconInt, connectionCode=$connectionCode, isActivated=$isActivated, arrayStats=${arrayStats.joinToString()})"
     }
@@ -144,20 +140,12 @@ fun createLargeSkillTree() : ArrayList<SkillNodeEntity> {
 }
 
 @Entity
-data class MobSkillTreeStats(@Id override var id: Long = 0): IntEntityObjectClass {
+data class MobSkillTreeStats(@Id override var id: Long = 0): AbsEntityBase<MobSkillTreeStats> {
     lateinit var arrayStats: ToMany<SkillNodeEntity>
 
     fun initializeAllStats() {
         arrayStats.clear()
         arrayStats.addAll(createLargeSkillTree())
-    }
-
-    fun getAllNodeStats() : ArrayList<DoubleProp> {
-        val result = ArrayList<DoubleProp>()
-        arrayStats.filter { it.arrayStats.isResolved && it.isActivated && !it.arrayStats.isEmpty() }.forEach {
-            result.addAll(it.arrayStats)
-        }
-        return result
     }
 
     fun getActiveNodes() : ArrayList<SkillNodeEntity> {
@@ -166,13 +154,13 @@ data class MobSkillTreeStats(@Id override var id: Long = 0): IntEntityObjectClas
         return result
     }
 
+    override fun getClassObj(): Class<MobSkillTreeStats> = MobSkillTreeStats::class.java
     override fun saveToBox() {
         arrayStats.forEach {
-            applicationBox.boxFor(SkillNodeEntity::class.java).put(it)
+            it.saveToBox()
         }
-        applicationBox.boxFor(MobSkillTreeStats::class.java).put(this)
+        super.saveToBox()
     }
-
     override fun toString(): String {
         return "MobSkillTreeStats(id=$id, arrayStats=\n${arrayStats.joinToString("\n")})"
     }

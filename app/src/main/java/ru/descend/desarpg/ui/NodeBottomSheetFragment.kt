@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ru.descend.desarpg.databinding.BottomSheetNodeBinding
-import ru.descend.desarpg.model.DoubleProp
 import ru.descend.desarpg.model.SkillNodeEntity
+import ru.descend.desarpg.model.StockStatsProp
 import ru.descend.desarpg.ui.adapters.AdapterSkillNodeList
 
 class NodeBottomSheetFragment : BottomSheetDialogFragment() {
@@ -53,7 +53,7 @@ class NodeBottomSheetFragment : BottomSheetDialogFragment() {
         binding.recyclerNodeStats.adapter = adapter
         binding.recyclerNodeStats.layoutManager = LinearLayoutManager(requireContext())
 
-        adapter.onNewData(ArrayList<DoubleProp>().apply { addAll(node.arrayStats) })
+        adapter.onNewData(ArrayList<StockStatsProp>().apply { addAll(node.arrayStats) })
 
         if (node.isActivated) {
             binding.activateButton.visibility = View.GONE
