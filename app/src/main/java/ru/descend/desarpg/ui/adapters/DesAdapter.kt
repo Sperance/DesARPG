@@ -12,14 +12,14 @@ import kotlin.reflect.full.functions
 abstract class DesAdapter<T, VM: ViewBinding>(private val classBinding: KClass<*>) : RecyclerView.Adapter<DesAdapter<T, VM>.ViewHolder>() {
 
     inner class ViewHolder(data: ViewBinding) : RecyclerView.ViewHolder(data.root) {
-        var binding: ViewBinding
+        var binding: ViewBinding = data
+
         init {
-            binding = data
             itemView.setOnClickListener {
-                onClicked?.invoke(adapterList[adapterPosition])
+                onClicked?.invoke(adapterList[adapterPosition], adapterPosition)
             }
             itemView.setOnLongClickListener {
-                onLongClicked?.invoke(adapterList[adapterPosition])
+                onLongClicked?.invoke(adapterList[adapterPosition], adapterPosition)
                 true
             }
         }
@@ -30,17 +30,17 @@ abstract class DesAdapter<T, VM: ViewBinding>(private val classBinding: KClass<*
     /**
      * Обработка события нажатия на элемент списка
      */
-    var onClicked: ((T) -> Any)? = null
+    var onClicked: ((T, Int) -> Any)? = null
 
     /**
      * Обработка события нажатия и удержания элемента списка
      */
-    var onLongClicked: ((T) -> Any)? = null
+    var onLongClicked: ((T, Int) -> Any)? = null
 
     /**
      * Метод привязки объекта к UI
      */
-    abstract fun onBindItem(item: T, binding: VM)
+    abstract fun onBindItem(item: T, binding: VM, position: Int)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val instances = classBinding.functions.last().call(LayoutInflater.from(parent.context), parent, false) as VM
@@ -48,7 +48,7 @@ abstract class DesAdapter<T, VM: ViewBinding>(private val classBinding: KClass<*
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        onBindItem(adapterList[position], holder.binding as VM)
+        onBindItem(adapterList[position], holder.binding as VM, position)
     }
 
     /**
@@ -58,6 +58,10 @@ abstract class DesAdapter<T, VM: ViewBinding>(private val classBinding: KClass<*
 
     open fun isAreItemsTheSame(itemNew: T, itemOld: T): Boolean? = null
     open fun isAreContentsTheSame(itemNew: T, itemOld: T): Boolean? = null
+
+    fun getItemIndex(item: T) : Int {
+        return adapterList.indexOf(item)
+    }
 
     fun getItem(index: Int): T? {
         return try {
@@ -119,17 +123,6 @@ abstract class DesAdapter<T, VM: ViewBinding>(private val classBinding: KClass<*
     /**
      * Задать список элементов адаптера
      */
-    open fun onNewData(newData: Array<T>){
-        val array = newData.toCollection((ArrayList()))
-        val diffResult = DiffUtil.calculateDiff(MyDiffUtilCallback(array , adapterList))
-        diffResult.dispatchUpdatesTo(this)
-        adapterList.clear()
-        adapterList.addAll(newData)
-    }
-
-    /**
-     * Задать список элементов адаптера
-     */
     open fun onNewData(newData: Collection<T>){
         val array = newData.toCollection((ArrayList()))
         val diffResult = DiffUtil.calculateDiff(MyDiffUtilCallback(array , adapterList))
@@ -137,6 +130,8 @@ abstract class DesAdapter<T, VM: ViewBinding>(private val classBinding: KClass<*
         adapterList.clear()
         adapterList.addAll(newData)
     }
+
+    fun getItems() = adapterList
 
     inner class MyDiffUtilCallback (
         private val newList: ArrayList<T>,

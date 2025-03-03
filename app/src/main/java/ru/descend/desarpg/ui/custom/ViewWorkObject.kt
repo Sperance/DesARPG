@@ -83,7 +83,7 @@ class ViewWorkObject @JvmOverloads constructor(
         binding.itemImage.setImageResource(drawableRes)
     }
 
-    fun setItemName(name: String) {
+    fun setItemName(name: String?) {
         binding.itemName.text = name
     }
 
@@ -103,15 +103,9 @@ class ViewWorkObject @JvmOverloads constructor(
         binding.expText.text = exp
     }
 
-    fun setProgressBarProgress(progress: Int) {
-        binding.progressBar.progress = progress
-    }
+    fun getProgressBar() = binding.progressBar
 
-    fun addProgressBarProgress(progress: Int) {
-        binding.progressBar.progress += progress
-    }
-
-    fun getProgressBarProgress() = binding.progressBar.progress
+    fun getTextProgress() = binding.textProgress
 
     fun setItemNameTextColor(@ColorInt color: Int) {
         binding.itemName.setTextColor(color)

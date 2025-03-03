@@ -11,7 +11,7 @@
         android:id="@+id/text_work_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="16dp"
         app:cardStrokeColor="@color/cardview_dark_background"
         app:cardStrokeWidth="1dp"
         app:text="Добыча в шахте"
@@ -59,7 +59,14 @@
         android:id="@+id/work_current_object"
         android:layout_width="match_parent"
         app:itemName="Камень"
+        android:layout_margin="16dp"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_work_types"
+        android:layout_width="match_parent"
         android:layout_margin="6dp"
+        android:padding="6dp"
         android:layout_height="wrap_content"/>
 
 </LinearLayout>

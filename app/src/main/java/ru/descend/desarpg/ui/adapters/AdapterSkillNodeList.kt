@@ -6,7 +6,7 @@ import ru.descend.desarpg.model.StockStatsProp
 import ru.descend.desarpg.to0Text
 
 class AdapterSkillNodeList : DesAdapter<StockStatsProp, AdapterItemNodeSkillBinding>(AdapterItemNodeSkillBinding::class) {
-    override fun onBindItem(item: StockStatsProp, binding: AdapterItemNodeSkillBinding) {
+    override fun onBindItem(item: StockStatsProp, binding: AdapterItemNodeSkillBinding, position: Int) {
         val statName = EnumPropsType.getFromName(item.type)?.statName + " "
         val valueProp = if (item.valueProp > 0) "+${item.valueProp.to0Text()}" else item.valueProp.to0Text()
         val valuePerc = if (item.percentProp > 0) "+${item.percentProp.to0Text()}%" else "${item.percentProp.to0Text()}%"

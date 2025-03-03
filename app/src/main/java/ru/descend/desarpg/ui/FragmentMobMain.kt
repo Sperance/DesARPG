@@ -14,6 +14,7 @@ class FragmentMobMain : BaseFragment<FragmentMobMainBinding>(FragmentMobMainBind
     }
 
     override fun setUpViews() {
+        initBaseStats()
         binding.buttonHealthTo50.setOnClickListener {
             viewModel.getStockStats().getStockStat(EnumPropsType.HEALTH).setValue(50).saveToBox()
             initBaseStats()
